@@ -1,0 +1,205 @@
+% Title:    A LaTeX Template For Responses To a Referees' Reports
+% Author:   Petr Zemek <s3rvac@gmail.com>
+% Homepage: https://blog.petrzemek.net/2016/07/17/latex-template-for-responses-to-referees-reports/
+% License:  CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/)
+\documentclass[11pt]{article}
+
+
+\marginparwidth 0pt
+\oddsidemargin  0pt
+\evensidemargin  0pt
+\marginparsep 0pt
+\topmargin   -0.25in 
+\textwidth   6.5in
+\textheight  9.0in
+% Allow Unicode input (alternatively, you can use XeLaTeX or LuaLaTeX)
+\usepackage[utf8]{inputenc}
+\usepackage{color,nima}
+\newcommand{\outNim}[1]{}
+
+\usepackage{microtype,xparse,tcolorbox}
+\newenvironment{reviewer-comment }{}{}
+\tcbuselibrary{skins}
+\tcbuselibrary{breakable}
+\tcolorboxenvironment{reviewer-comment }{empty,
+  left = 1em, top = 1ex, bottom = 1ex,
+  borderline west = {2pt} {0pt} {black!20},breakable
+}
+\ExplSyntaxOn
+\NewDocumentEnvironment {response} { +m O{black!20} } {
+  \IfValueT {#1} {
+    \begin{reviewer-comment~}
+      \setlength\parindent{2em}
+      \noindent
+      \ttfamily #1
+    \end{reviewer-comment~}
+  }
+  \par\noindent\ignorespaces
+} { \bigskip\par }
+
+% \NewDocumentEnvironment {response} { +m O{black!20} } {
+%   \IfValueT {#1} {
+%     \begin{tcolorbox}[breakable]
+%         \setlength\parindent{2em}
+%       \noindent
+%       \ttfamily #1
+%     \end{tcolorbox}
+  
+%     % \begin{reviewer-comment~}
+%     %   \setlength\parindent{2em}
+%     %   \noindent
+%     %   \ttfamily #1
+%     % \end{reviewer-comment~}
+%   }
+%   \par\noindent\ignorespaces
+% } { \bigskip\par }
+
+
+\NewDocumentCommand \Reviewer { m } {
+  \section*{Comments~by~Reviewer~#1}
+}
+\ExplSyntaxOff
+%\AtBeginDocument{\maketitle\thispagestyle{empty}\noindent}
+
+% You can get probably get rid of these definitions:
+\newcommand\meta[1]{$\langle\hbox{#1}\rangle$}
+\newcommand\PaperTitle[1]{``\textit{#1}''}
+
+\title{Statement on the Revision of \meta{Paper ID} \\
+  Based on the Referees' Report}
+\author{Author1 \and Author2 \and Author3}
+\date{\today}
+\usepackage{setspace}
+% \onehalfspacing
+ \linespread{1.5}
+
+\begin{document}
+
+
+% This statement concerns our revision of the \meta{Paper ID} paper,
+% entitled \PaperTitle{\meta{Paper Title}}, based on the referees' report.
+\subsection*{TODO}
+
+ \linespread{1}
+\outNim{
+\begin{enumerate}
+    \item .
+\end{enumerate}
+}
+ \linespread{1.5}
+
+\Reviewer{\#2}
+
+\begin{response}{
+I read the revised manuscript "Structural phase transition in physical networks" by Dehmamy et al. The authors's rebuttal is unsatisfactory. As a minimum, I recommend the authors to write explicitly in their rebuttal letters how they have addressed my concerns. It was very difficult to locate the changes made to the manuscript, which I found to be minimal. The responses and proposed changes to my concerns are below the standard required for a high profile journal of broader impact. 
+
+The changes implemented by the authors are not satisfactory, and leave my concerns unaddressed. The answer to my main concern is based on a single line statement in the Supplementary Material, which is unsatisfactory, and also logically faulted. Below I explain my concerns in detail. 
+}
+We apologize if our response did not confer our message adequately.
+we do believe much of your concerns will be addressed with a better explanation of our work.
+We will restructure the manuscript accordingly. 
+\end{response}
+
+\begin{response}{
+The new derivation of Eq. (1) provided in the Supplementary material is obtained in the very simple case of a star-shaped network, and then claimed to be valid for general scale free networks because "each hub is essentially like star shaped 
+network". 
+I cannot accept this informal argument as a satisfactory answer to my question, neither I think it is true.
+How can an emergent global property of a network be deduced by local properties of a few of its nodes? 
+In addition, global properties of a scale-free network are nowhere close to 
+those of a star-shaped network. 
+}
+Section S10.A surely has shortcomings and needs more explanation, we apologize for that. 
+The argument is not that a star-shaped network is representative of all networks. 
+In S10.A and B we are finding the space occupied by the links around {\em any} node in {\em any} network, not just a star-shaped one. 
+The difference among topologies could appear in the average link length (Eq. SI.51).
+{\color{red} We now show explicitly why the $3/4$ factor is a good estimate for Erd\"os-Renyi, Barabasi-Albert, and any scale-free network despite the vastly different topologies. (show)}
+
+In order to evaluate possible transitions we first need to find how the volume occupied by links compares to nodes. 
+We have to start by looking at a single node and then find how the network as a whole behaves. 
+The main point is that both the length of the link and the overlap between the links coming out of a node need to be considered (Eq. SI.52). 
+Clearly, the link volume for a single node is not sufficient to find the global transition, and we find that, unless the network consists of repeating substructures 
+(e.g. Lattices and Random Geometric Graphs (RGG)), the full network needs to be considered. This is why Eq. SI.53 needs to be calculated globally, over the full network, in the case of ER, BA and other scale-free networks. 
+Note that, Eq. SI.52 {\em does not} rely on having a star-shaped network and is a general equation for {\em any node} in any network in 3D.
+It also does not rely on the $3/4$ factor from Eq. SI.51 which is holds for ER, BA, scale-free and star-shaped networks. 
+{\color{red}
+We are changing the title and content of S10.A to derive and emphasize this fact.} 
+
+\end{response}
+\begin{response}{
+If a SF network is in the same class of a tree under the model studied by the authors, the theory can be mapped to a 
+trivial one where the basic topology is a tree and variables are essentially 
+decoupled from one another. 
+The authors should remove this misleading, if not wrong, statement about the equivalence 
+of SF and star networks, and work out a proper derivation of Eq.(1) in the context of SF networks,. Claims of universality needs to be reduced to what can be actually supported by analytic and numerical results at hand. 
+}
+We would like to emphasize again that Eq. SI.51 does {\em not} assume tree structure.
+Eq. SI.52 is general for any node, and Eq. SI.53 is correct for any network topology.
+In Eq. SI.53 the sum should be taken over the smallest irreducible subgraph, which for ER, BA and SF is the whole network and for Lattice and RGG is the unit cell. 
+This is precisely showing that the global network structure is required to find the transition point, not just the local Eq. SI.52. 
+
+Finally, the accuracy of Eq. SI.53 is supported by by the several hundred simulations in Figs. 2, SI.18 and SI.19. 
+
+\end{response}
+\begin{response}{
+
+The claim about the behavior of the average curvature changed from "the average curvature remains constant in the weakly interacting regime" to "the average curvature remains 
+constant in the transition region", which is a weaker claim than the previous one. 
+What is the impact of this weaker result on the universality of their results? 
+Also, What is the reason for the increasing part of ELI curvature to change in 
+the weak phase, as compared to the FUEL curvature? 
+}
+
+The authors are not sure what the Referee is referring to. 
+The manuscript reads (line 88-90): `` A similar behavior is seen for the average curvature of the links, $\be{C}$, finding that it shows modest changes throughout the weakly interacting phase (Fig. 2C), indicating that despite multiple local bending necessary to avoid conflicts the links remain largely straight.''
+The caption of FIg.2 reads ``(C) The average link curvature rises slowly in
+1214 the weakly interacting regime, until the transition region where it gradually reaches a peak around the transition point. In the
+1215 strongly interacting regime the curvature falls linearly with increasing $r_L/r_N$.''
+We do observe and increase in curvature in ELI earlier than FUEL. 
+The main reason is FUEL can relax the curvature in the weak regime by slight movements of the nodes, whereas in ELI the fixed nodes do not allow for such rearrangement. 
+Thus, it is natural that in ELI the link curvature begins to rise at smaller radii. 
+
+The key point is that, while in the weakly interacting regime the curvature keeps rising in both ELI and FUEL, it peaks in the transition  region and begins to fall linearly in the Strong regime.
+Also, while in the weak regime there are observable differences between BA and ER in both
+ELI and FUEL, these differences disappear in the strong regime. 
+This is the universality statement: layouts of different topologies in the strong regime are virtually indistinguishable. 
+
+\end{response}
+
+\begin{response}{
+I do not fully understand how the transition region has been defined here. 
+What is the definition of the width $\sigma$?, how it shrinks with the system size? If results are now valid only in the transition region, universality can be 
+claimed only in a narrow critical domain, as compared to the entire weak and 
+strong phases as initially claimed. 
+}
+
+We emphasize that none of the universality claims is restricted to the transition region (critical domain). 
+The strongest universal behavior, where network topologies become indistinguishable, occurs in the strong regime, as Fig.2 demonstrates.
+We discuss the $\sigma$ in the next point. 
+In short, $\sigma$ is the width of a logistic fit to the rescaled order parameter curve (Fig.2.K).
+
+\end{response}
+\begin{response}{
+
+In my previous report I asked the authors to support the claim of a phase transition by analyzing finite size effects. 
+Has this analysis been accomplished to support the claim of existence of a true phase against a crossover? 
+
+}
+Yes, we have done extensive studies of the effect of the size. 
+We observed that the width of the transition does not become narrower with increasing network size, indicating that the transition is not a true second order phase transition, and more similar to a glass transition {\color{red}(which sometimes behaves like a crossover)}.
+For instance, Fig.SI.20 shows that cubic lattices of many sizes have the exact same order-parameter curve and the width of the transition region, as well as the transition point are independent of the lattice size. 
+Fig.2.K shows that for FUEL in ER and BA, rescaling by the transition point again collapses all curves. 
+It also shows that the width of the transition region after rescaling is again independent of the network size. 
+If this were a true second order phase transition and the width was due to finite size effects, it should have become narrower for larger networks. 
+Thus, the width seems to remain finite in the thermodynamic limit.
+
+The width does change sightly with the choice of parameters such as the $k/A_L$ ratio, number of link segments and the steepness (exponent) of the repulsion (see SI.11 and Figs.SI.21-23). 
+However, none of these parameters seemed to result in a noticeable sharpening of the transition region and none of these parameters needs to be infinite in a physical system, such as polymers or the brain. 
+Thus we concluded that the transition cannot be a true second order transition and more like a glass transition (lines 129-131).
+
+\end{response}
+
+
+In conclusion, we hope that our explanation and rewriting of sections resolves the Referee's concerns.  
+\bibliographystyle{plain}
+\bibliography{mybib}
+\end{document}

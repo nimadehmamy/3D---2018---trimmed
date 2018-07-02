@@ -1,0 +1,26 @@
+nw = 1
+i =0
+c='rgbcmyk'
+for p,n in nz:
+    p1= p.replace('B','BA').replace('E','ER').replace('W','WS')
+    phase_plots(n, name=p1, new = nw,c=c[i], lw=2 )
+    print p,
+    nw = 0 
+    i+=1
+subplot(311)
+x = linspace(1e-1,1e1, 10)
+c = 1
+plot(x,2*x**c, 'r--',lw=2, label = r'$y = 2 x^{%d}$'%c)
+xt = xticks(xticks()[0][1:],[])
+xlim(5e-4,1e1)
+legend(ncol = 2,loc = 2, fontsize = 12)
+subplot(312)
+yt = yticks(yticks()[0][1:-1])
+xt = xticks(xticks()[0][1:-2],[])
+xlim(5e-4,1e1)
+subplot(313)
+xlabel('Edge thickness / Node radius', fontsize= 14)
+savefig('./__work/3D/notes/plots/0916/phase-topol.pdf')
+savefig('./__work/3D/notes/plots/0916/phase-topol.png')
+
+show()

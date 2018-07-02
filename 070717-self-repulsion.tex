@@ -1,0 +1,166 @@
+%\documentclass[12pt]{article}%
+\documentclass[nofootinbib,preprint,endfloats]{revtex4} % ,endfloats
+%\documentclass[12pt,a4paper,final]{iopart}
+\usepackage{nima,graphicx,amsmath,amssymb,color,hyperref}
+\usepackage{mathrsfs}
+%\usepackage{graphicx}
+\usepackage{comment}
+
+% \newcommand{\Ls}{\mathscr{L}}
+
+% \newcommand{\lrto}{\leftrightarrow}
+%  \marginparwidth 0pt
+%  \oddsidemargin  0pt
+%  \evensidemargin  0pt
+%  \marginparsep 0pt
+%  \topmargin   -0.25in 
+% \textwidth   6.5in
+%  \textheight  9.0 in
+\newcommand{\outNim}[1]{}
+
+\begin{document}
+\title{Notes on self-repelling links}
+\author{Nima Dehmamy\thanks{nidami@gmail.com}}
+\date{\today}
+\maketitle 
+\section{Visualization Simulations\label{ap:params}}
+For a weighted network, there are multiple choices one can make regarding how the weights are related to the link thicknesses.
+Choosing a linear relation is not always ideal, especially if the distribution of link weights is fat-tailed. 
+For the flavor network, we chose the link thickness to grow with $w^{1/2}$, which means that the cross-sectional area of links is proportional to their weights. 
+This is consistent with what bundling multiple links would yield. 
+It also makes for a more pleasant visualization. 
+
+\subsection{Relation between Node Radii and Link Thicknesses}
+To make sure the node size is adequate to make it visible in the presence of its links, the node radius should be related to the link thicknesses. 
+When links cross their node of origin, they cover a portion of its area.
+When the link thickness is small compared to the node size, the area covered on the link is roughly the cross-sectional area of the link. 
+Thus, for the node to be visible in this situation, its radius $R_N$ must satisfy
+\begin{equation}
+    4 \pi R_N^2 > \pi \sum_{l\in <N>} r_l^2 \quad R_N > {1\over 2} \sqrt{\sum_{l\in <N>} r_l^2} = \sqrt{k_N} r_{\mathrm{rms}}  
+\end{equation}
+that is, $R_N$ is related to the root-mean-squared of the thicknesses of its links. $k_N$ is the degree of node $N$.  
+In the extreme case where the link thickness is very large such that one link is covering most of the node area, the cross-seactional area of the link becomes roughly the cross-sectional area of the node itself, meaning $R_N \sim r_l$. 
+
+Thus, a safe choice for node size that would satsfy both cases would be 
+$R_N > r_{\mathrm{rms}}$
+To make the nodes prominent in the visualization, we thus choose 
+\[R_N = 1.5 r_{\mathrm{rms}}\]
+
+
+\outNim{
+\subsection{FDL bad}
+Even with a reasonably small link thickness, the plain FDL puts nodes too close to each other and makes linking them very cumbersome. Of course, modern algorithms based on FDL modify it in order to avoid such node crossings. 
+Our E-ELM algorithm with purely short-range forces between nodes naturally includes the exclusion volume around nodes and avoids nodes overlaps. 
+}
+
+\section{Contractible repelling links with self-repulsion}
+When defining repulsive forces for elastic links, we are faced with a dilemma. 
+Consider a simple short-range repulsive force, such as hard-core repulsion or smooth versions of it. 
+They all define a minimum distance that any given point on a link would have from all other link points. 
+Here lies the dilemma: 
+On the one hand, we want the links to not have a predefined minimum length --the length is determined by the optimization process--, but on the other hand, we don't want a link to cross itself, either. 
+If we introduce self-repulsion through a fixed radius hard-core repulsion, that radius times the number of discrete link segments determines the minimum link length and it will prevent us from finding optimal wiring length. 
+The resolution that we propose is a repulsive force that adjusts itself to the length of the link. 
+ \citep{cleaver1996extension}
+
+In directions perpendicular to the link segment, we want the range of the repulsive force to be the link thickness $r_L$. But along the link segment with length $ds$, we want the force to only reach a distance $ds/2$. 
+This makes sure that the segment does not push its adjacent segments away and, thus, doesn't interfere with the link shrinking process, which is essential in the wiring length optimization.
+To do so requires defining a much more complex type of force than spherical repulsion. 
+We need to define a force based on the interaction of two ellipsoidal force fields. 
+We call this the ``double-ellipsoidal'' basis, and it will require defining a metric for every pair of interacting link segments to measure how close they are relative to the link orientation, segment length and the link thickness. 
+The mathematical derivation of this is given in the SI \ref{ap:ell}. 
+The general idea is that the distance $\Delta x_{lm} = x_l(s_l) - x_m(s_m)$ between two link segments on links $l$ and $m$ is vector which in each direction need to be compared to how close the ellipsoids defined along the links $l$ and $m$ are to each other. 
+
+
+\section{Double-Ellipsoidal Metric \label{ap:ell}}
+The current form of the repulsive force between two links $i,j$ is a function of the distance between points $x_i$ and $x_j$ along the links. 
+Defining a distance requires defining a metric. 
+Naively, one might think that this metric is the euclidean space metric, but note that the strength of the force depends on the scale defined in this metric. 
+For instance, in the Gaussian potential for links with thickness $r_L$ the width of the Gaussian can be thought of as part of the metric function $g(X,Y)$. 
+In other words, the metric yields
+\[g(\Delta x, \Delta x) = \Delta x^i \Delta x^j {\delta_{ij} \over (2 r_L)^2}  \]
+The denominator comes from he thickness of the two links. When the thicknesses are different, we must have
+\[g(\Delta x, \Delta x) = \Delta x^i \Delta x^j {\delta_{ij} \over ( r^{(i)} +r^{(j)})^2}  \]
+To generalize this to the case of ellipsoidal potential, we must first understand how this metric relates to projections along different directions. 
+The inverse of the metric can be related to these projections. 
+We want a definition of the inverse metric which would yield $\pr{r^{(i)} +r^{(j)}}^2$ in the spherical case. 
+
+The inverse metric is defined on the tangent space as a symmetric rank 2 tensor $ g^{-1} = \pr{g^{-1}}^{\mu\nu}\ro_\mu \ro_\nu $. 
+The components of the inverse metric  come from three projections onto three vectors $v_i$
+\begin{equation}
+    \pr{g^{-1}}^{\mu\nu} = V^\mu_\rho \delta^{\rho \lambda} V^\nu_\lambda =  \sum_{\rho} V_\rho^\mu V_\rho^\nu \label{eq:ginv}
+\end{equation}
+For each pair of links $i,j$ if we define the vectors as $V_\rho^\mu =% \vec{r}_{1i}+\vec{r}_{2i} = 
+\pr{{r^{(i)}}_{\rho}^\mu+{r^{(j)}}_{\rho}^\mu} $. 
+$r^{(i)}$ and $r^{(j)}$ are each a set of three mutually orthogonal vectors defining the axes of the ellipsoids. 
+When we have spheres, all three vectors $r^{(i)}_\rho$ and $r^{(i)}_\rho$ have the same magnitude. 
+The spherical case should reduce to the usual metric with the radii $r^{(1)}$ and $r^{(2)}$ of the spheres appearing in the metric along the diagonal, as 
+%In this case, we can choose the three vectors $r^{(1)}_{\rho } + r^{(2)}_{\rho}$ always have the same projection in all directions and so 
+
+$$ \pr{g^{-1}}^{\mu\nu} = |r^{(i)}+r^{(j)}|\sum_{\rho} \hat{r}_\rho^\mu \hat{r}_\rho^\nu = |r^{(1)}+r^{(2)}| \delta^{\mu\nu }$$
+This is because $ \pr{g^{-1}}^{\mu\nu} $ is a Hermitian matrix with all eigenvalues equal to $|r^{(1)}+r^{(2)}|$ and is therefore proportional to the identity matrix $I$. The identity matrix is invariant under all rotations and so, this metric is diagonal in all bases.
+We will use this as a test for the consistency of our double-ellipsoidal metric below. 
+ 
+\subsection{Different Orientations}
+We start by defining what we will call the ``orientation tensor'' of the ellipsoid. 
+This tensor is the set of vectors defining the major axes of the ellipsoid and in the orthonormal basis of the axes f the ellipsoid it becomes diagonal. Let us denote everything in the basis of the ellipsoid by a prime as $x',y',z'$. The orientation tensor in this basis is  
+\begin{equation}
+    {r'}^{(i)} = \left(\begin{array}{c|c|c}r'_{x'} & r'_{y'} &r'_{z'}\end{array}
+    \right) = R \begin{pmatrix}
+    |r'_{x'}| \\ 
+    & |r'_{y'}|\\ 
+    & &|r'_{z'}|
+    \end{pmatrix}
+    \label{eq:ell}
+\end{equation}
+%What happens if the vectors defining the ellipsoids of the two links are not along the principal directions (i.e. $x,y,z$)? 
+The set of orientation vectors $r^{(i)}$ with components ${r^{(i)}}_{\mu}^\nu$ is a (1,1) tensor and transforms under rotations $R$ as $r \to R^{-1} r R$. 
+For the spherical case, this doesn't matter, because the orientation tensor $r^{(i)} = |r|I$ and is invariant under rotations. 
+But other cases where the ellipsoid has different radii in different directions require us to find the transformations that take a diagonal $r = \mathrm{diag}(r_x,r_y,r_z)$ from the basis of the ellipsoid to the global $x,y,z$. 
+In practice, we know the axes of the ellipsoid in the global coordinates as three vectors with components  ${r^{(i)}}_{x'}^\mu, {r^{(i)}}_{y'}^\mu, {r^{(i)}}_{z'}^\mu$ with $\mu = x,y,z$ of the global coordinates. However, the other index $x',y',z'$ is defined in the basis of the ellipsoid and we still need to transform that index to the global coordinates.  
+To reiterate,  we have the three columns of $r^{(i)}$ as vectors in the global coordinates $\mu$, we already have the row index transformed into the global basis and don't need to transform it again. 
+But we do need to transform the ellipsoid $\mu'$ index, which involves a rotation similar to the rotation that would act on $r^{(i)}$ to take the $\mu$ index to the local $\mu'$, just transposed. 
+How do we efficiently find this transformation? 
+To do this, note that $r^{(i)}$ is the result of acting with one rotation $R$ from the one side on a diagonal matrix with the radii of the ellipsoid $r'_{\mu'}$ on its diagonal, that is
+\begin{equation}
+    r^{(i)} = \left(\begin{array}{c|c|c}r'_{x'} & r'_{y'} &r'_{z'}\end{array}
+    \right) = R \begin{pmatrix}
+    |r'_{x'}| \\ 
+    & |r'_{y'}|\\ 
+    & &|r'_{z'}|
+    \end{pmatrix}
+\end{equation}
+Thus, if we Find the magnitude of each column and divide the column by it, we find $R$. 
+Then we simply multiply $r^{(i)}$ by the transpose of $R$ from the right in order to go from the $\mu'$ basis to the global $\mu$ basis 
+\[\tilde{r}^{(i)} = r^{(i)}R^T. \]
+$\tilde{r}^{(i)}$ has components $\pr{{\tilde{r}^{(i)}}}^\mu_\nu$ where both indices are in the global coordinates.
+Note that this step is crucial when dealing with two ellipsoids with different orientations, because, although \eqref{eq:ginv} has an inner product on the local index $\rho$, the basis in which $r^{(i)}$ and $r^{(j)}$ are diagonal are the orientation bases of each of the ellipsoids they represent. 
+Therefore, both have to be first transformed into a similar basis (e.g. the global basis) before they can be added in $V^{\mu}_\rho$. 
+Once we have these transformed orientation vectors, the inverse metric 
+It is easy to check that for a sphere $\tilde{r}^{(i)}$ is diagonal and thus the inverse metric remains a scaled Euclidean metric. 
+Thus, the final step is to combine the transformed orientation tensors and construct the metric for the pair $i,j$ as 
+\begin{equation}
+    g_{\mu\nu}^{(ij)} = \left[\pr{r^{(i)}{R^{(i)}}^T+ r^{(j)}{R^{(j)}}^T} \pr{R^{(i)}{r^{(i)}}^T+ R^{(j)}{r^{(j)}}^T} \right]^{-1}_{\mu\nu}
+\end{equation}
+The potential energy is then defined similar to befor, only this time using the new metric 
+\begin{align}
+    \Delta {x^{(ij)}} &= x^{(i)} - x^{(j)}\cr
+    V_{ij} &= A\exp\left[\pr{
+    g_{\mu\nu}^{(ij)} \Delta {x^{(ij)}}^\mu \Delta {x^{(ij)}}^\nu }^{p/2}   \right]
+    %\cr f(x) &= A \exp\left[- x^p \right]
+    \label{eq:Vij-ell}
+\end{align}
+where sum over $\mu,\nu$ is understood (i.e Einstein notation).
+
+\subsection{Implementation}
+To construct the ellipsoids, we first need to find two vectors perpendicular to the $dl$ vector going along the link segment. This can be done using the cross product.
+For example, the two vectors can be found through 
+\begin{equation}
+    \hat{r}_1 = \hat{x} \times \hat{dl}, \quad \hat{r}_2 = \hat{r}_1 \times \hat{dl} 
+    \label{eq:r12}
+\end{equation}
+and then define $r_1 = r_L \hat{r}_1$ and $r_2 = r_L \hat{r}_2$. Finally, to ensure that the cross product in $\hat{r}_1$ doesn't vanish, instead of $\hat{x}$ we should choose the direction in which $dl$ has the smallest projection. 
+In terms of time complexity, brute-force matrix inversion is $O(n^3)$ and the dot product using the metric is $O(n^2)$, while the spherical case had a simple dot product for $|\Delta x|$, which is $O(n)$. Here $n=3$ is the dimensions of the vectors. 
+However, the main part of the time complexity comes from iterating over $N_s$ different link segment points and forming interaction pairs. 
+Since that part is not different between using the spherical versus Ellipsoidal forces, the overall complexity only changes by a factor, and the exponent of $N_s$ will not change.
+\end{document}

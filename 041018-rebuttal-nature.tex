@@ -1,0 +1,1015 @@
+% Title:    A LaTeX Template For Responses To a Referees' Reports
+% Author:   Petr Zemek <s3rvac@gmail.com>
+% Homepage: https://blog.petrzemek.net/2016/07/17/latex-template-for-responses-to-Referees-reports/
+% License:  CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/)
+\documentclass[11pt]{article}
+
+\usepackage{amsmath,amssymb}
+\marginparwidth 0pt
+\oddsidemargin  0pt
+\evensidemargin  0pt
+\marginparsep 0pt
+\topmargin   -0.25in 
+\textwidth   6.5in
+\textheight  9.0in
+% Allow Unicode input (alternatively, you can use XeLaTeX or LuaLaTeX)
+\usepackage[utf8]{inputenc}
+\usepackage{color,nima}
+\newcommand{\outNim}[1]{}
+
+\usepackage{hyperref}
+
+\usepackage{microtype,xparse,tcolorbox}
+\newenvironment{reviewer-comment }{}{}
+\tcbuselibrary{skins}
+\tcbuselibrary{breakable}
+\tcolorboxenvironment{reviewer-comment }{empty,
+  left = 1em, top = 1ex, bottom = 1ex,
+  borderline west = {2pt} {0pt} {black!20},breakable
+}
+\ExplSyntaxOn
+\NewDocumentEnvironment {response} { +m O{black!20} } {
+  \IfValueT {#1} {
+    \begin{reviewer-comment~}
+      \setlength\parindent{2em}
+      \noindent
+      \ttfamily #1
+    \end{reviewer-comment~}
+  }
+  \par\noindent\ignorespaces
+} { \bigskip\par }
+
+% \NewDocumentEnvironment {response} { +m O{black!20} } {
+%   \IfValueT {#1} {
+%     \begin{tcolorbox}[breakable]
+%         \setlength\parindent{2em}
+%       \noindent
+%       \ttfamily #1
+%     \end{tcolorbox}
+  
+%     % \begin{reviewer-comment~}
+%     %   \setlength\parindent{2em}
+%     %   \noindent
+%     %   \ttfamily #1
+%     % \end{reviewer-comment~}
+%   }
+%   \par\noindent\ignorespaces
+% } { \bigskip\par }
+
+
+\NewDocumentCommand \Reviewer { m } {
+  \section*{Comments~by~Reviewer~#1}
+}
+\ExplSyntaxOff
+%\AtBeginDocument{\maketitle\thispagestyle{empty}\noindent}
+
+% You can get probably get rid of these definitions:
+\newcommand\meta[1]{$\langle\hbox{#1}\rangle$}
+\newcommand\PaperTitle[1]{``\textit{#1}''}
+
+\title{Statement on the Revision of \meta{Paper ID} \\
+  Based on the Referees' Report}
+\author{Author1 \and Author2 \and Author3}
+\date{\today}
+\usepackage{setspace}
+% \onehalfspacing
+ \linespread{1.5}
+
+
+\renewcommand{\thefigure}{R.\arabic{figure}}
+
+
+\begin{document}
+
+
+% This statement concerns our revision of the \meta{Paper ID} paper,
+% entitled \PaperTitle{\meta{Paper Title}}, based on the Referees' report.
+\outNim{
+\subsection*{TODO}
+
+ \linespread{1}
+
+\begin{enumerate}
+    \item Code online
+    \item Why using $d\log\be{R}/d\log r_N$? 
+    Advantage over $dV/dr$?
+    \item Wouldn't it be a first order transition if slope of $V $ shows discontinuity?
+    % \item Complexity details
+    % \item Phase graph for 3D random geometric graphs.   
+    % \item Transition point not scaling with size. Discuss correct choice of $N,L$. 
+    % \item curvature  
+    % \item Discuss why relaxation time of ELI is not peaked
+    % \item Calculate finite size scaling of transition region. 
+\end{enumerate}
+}%%%%
+ \linespread{1.5}
+\Reviewer{\#1}
+
+\begin{response}{
+Characterizing the network geometry of networks is a topics of significant scientific interest and it is fundamental for understanding the architecture principles of the connectome and for the designing 3D integrated circuits. This manuscript provides a theoretical framework and an algorithm applicable to any network topology to characterize the network geometry in 3D when links have a give thickness and link crossing are forbidden.
+While the optimization problem addressed by this manuscript is NP hard, the proposed algorithms are able to find the energetically favourable local minima and avoid link crossing. The conducted investigation over a large variety of networks reveals an universal phase transition between a weakly interacting phase and a strongly interacting phase as a function of the links thickness. The network physical properties are tested by applying external forces and monitoring the network response. It is found that the observed phase transition corresponds to a solid and fluid gel-like response to stress.
+The work is highly innovative and very important to reveal the network geometry underlying complex networks. As such it has a wide realm of applications and it will be important for a large variety of disciplines. I believe that this work together with the rich Supplementary Material are suitable for publication in Nature.
+However I would like to raise few comments that the Authors might consider to address for their resubmitted revealing the wide range of questions that such work can generate.
+}
+We thank the Referee for the excellent summary of the paper's results and for the gracious comments on its potential impacts. 
+
+\end{response}
+
+\begin{response}{
+1) First of all I believe that a freely available codes would be very important for busting the research in this field. Are the Authors thinking of publishing their code?
+}
+Yes, we plan to share the code. 
+We will be sharing 
+all source codes in Python, together with an example code in Jupyter notebook, on Github. 
+The link is \texttt{\href{https://github.com/nimadehmamy/3D-ELI-FUEL}{github.com/nimadehmamy/3D-ELI-FUEL}} where we plan to continue to update and perfect the code. 
+We are also adding a web-based tool to visualize and interact with the simulations in 3D (\texttt{\href{http://nimadehmamy.com/3dviz}{nimadehmamy.com/3dviz}}).
+
+%{\color{red} Include URL?} 
+\end{response}
+\begin{response}{
+2) An analysis of the computational complexity of the algorithm would be relevant, how does the time of computation and the memory needed to store these physical networks scale with the network parameters?
+}
+This is, indeed, a key point. 
+Prompted by the Referee's question, we now added in Sec. SI 8.C a detailed analysis of the time complexity of the algorithm. 
+Briefly, if each link has $s$ segments, each iteration has the following time complexities:
+\begin{enumerate}
+    \item {\bf Brute-force:}  Elastic force contribution is $O(sL)$;  node repulsion contribution is $O(N^2)$; and link repulsion contribution $O(s^2L^2)$. 
+    Since for a connected network $L\geq N-1$ and $s>1$, the total complexity is $O(s^2L^2)$.  
+    \item {\bf Exploiting short range of link repulsion:}
+    We only need short-range link repulsion to avoid crossings. 
+    Partitioning the space into cubic cells of size $ar_L$ (with $a \sim O(1)$; with $a=4$) we  capture most of the link repulsion by considering interactions within cells.
+    With cells the worst case complexity becomes $O\pr{s^2a^3 L^{3/2}}$ (SI 8.C).
+    % \item {\bf Update cells:} We update the cells and change their location randomly every few (50-100) iterations to better capture all interactions. 
+    % Updating cells is $O(sL)$.
+    \item {\bf Reduced complexity:} 
+    A modified version of the code, only calculating link repulsion for $c$ link pairs instead of all pairs in a cell, has complexity 
+    $O\pr{c L^{3/2}/ a^3}$ (SI 8.C)
+\end{enumerate}
+
+The simulation code may achieve an even better time complexity by using Binary Space Partitioning, such as a k-d tree, replacing the uniform cells that we implemented.
+
+Discussion of the computational complexity is crucial for assessing the feasibility of any algorithm and we thank the Referee for bringing this up. 
+We now mention the model's computational complexity in the paper, and added a new section in the SI 8.C to discuss this issue in detail.  
+% We wish to thank the Referee for highlighting the need to explicitly address this important issue. 
+% We will definitely extend SI 8.C to include the above.
+% This discussion is also useful for understanding the structure of  simulation code and the choices made therein.
+
+
+\end{response}
+\begin{response}{
+3) Random geometric graphs are actually geometrical networks including a lot of link crossings. I imagine that one could observe a difference between the phase transition between the weak-interacting phase and the strong interacting phase for random geometric graphs in 2D or in 3D. My intuition is that for 3D random geometric graphs well deep in the percolation phase maybe the weak interacting phase disappear or else is significantly reduced. However for random geometric networks in 2D it is more easy to use the third dimension of the physical embedding to avoid crossings. 
+}
+
+This is a fascinating hypothesis. 
+Following the Referee's suggestion, we simulated 2D Random Geometric Graphs (RGG), using ELI at various link thicknesses. 
+The phase diagram of the 2D and 3D RGG (Fig. \ref{fig:RGG}, see also SI 10.E) shows no discernible distinction between this network and the rest of the networks we examined, as the random graph in Fig. \ref{fig:RGG} demonstrates.
+The RGG does differ in the transition point. 
+The reason is that RGG and a lattice have approximate and exact translational symmetry, respectively.
+In such cases the transition point should be calculated for a unit cell, rather than the whole network. 
+We discuss this in detail in SI 10. 
+
+\outNim{
+\color{red} 
+Note that a random geometric graph (RGG) in 3D shares some characteristics of a force-directed layout (FDL) of an Erd\"os-Renyi (ER) random graph: 
+1) in both networks nodes have a peaked degree distribution, thus most nodes have comparable degrees and have similar density of links around them; 2) in FDL connected nodes are on average closer to each other than disconnected nodes, similar to an RGG.
+One can argue that any ER graph is a RGG in $N-1$ dimensional space. 
+Since our analysis shows that (Eq.(4)) the density of links is the important factor in the phase transition, we expect 3D RGG to behave similar to ER. 
+% The 2D random graph embedded in 3D (with nodes fixed on a 2D plane) behaves the same as the rest of the networks in 3D (Fig. \ref{fig:RGG2})
+}
+
+\begin{figure}
+    \centering
+    % \includegraphics[width=.8\textwidth]{fig-09-19/phase-RGG-2d.png}
+    % \includegraphics[width=.8\textwidth]{fig-09-19/phase-RGG.png}
+    \includegraphics[width=.8\textwidth]{fig-09-19/phase-RGG-rand-042018.png}
+    \caption{\scriptsize {\bf Phase Diagram of 2D and 3D random geometric graph (RGG) in 3D:} 
+    The behaviors of the 2D and 3D RGG are largely indistinguishable from the other networks we examined in 3D. 
+    }
+    \label{fig:RGG}
+\end{figure}
+
+
+The Referee by noting the symmetric structure of RGG points out an important aspect of the observed phase transition: 
+When the symmetries of 3D space are restricted, for instance by restricting nodes to a 2D subspace, the transition point may be affected. 
+We are adding an explanation in the text and SI 10.E, clarifying the conditions under which the predicted transition point Eq.(4) is valid.
+
+In summary, we wish to thank Referee 1 for the strong endorsement of the manuscript, and for the pertinent questions about the RGG and computational complexity. 
+Addressing these issues have considerably improved the paper. 
+% Another aspect of these assumptions
+
+% There are multiple, interesting scenarios that may pertain to the Referee's question. 
+% If the Referee is assuming we start from a 2D random geometric graph (RGG), laid out on a plane, and then use our ELI algorithm in 3D to resolve its crossings while keeping nodes fixed, then, yes. 
+% There would not exist any weakly interacting phase, as a large number of links have conflicts from the beginning. 
+% {\color{red} TEST!!! This would arise from the  unusual symmetry of this setting}
+% Note that in 2D any non-planar graph will have unresolvable link crossings. 
+% This will include random geometric graphs. 
+% So, in this sense, the Referee's intuition is correct and the weakly interacting phase essentially disappears deep in the percolation phase. 
+% %But, maybe the Referee's question is about embedding a 2D random geometric graph in 3D, or ? 
+% However, if you are asking whether for a 3D random geometric graph the weakly interacting phase disappears, we would argue that it does not. 
+% %{\color{red} ER $\sim$ geometric, but not in 3D necessarily! show plots and sims!}
+
+% Note that any force-directed layout (FDL) puts connected nodes closer to each other than non-connected nodes, which is also the formation criterion for a random geometric graph. 
+% Thus, any FDL is equivalent to a random geometric graph which starts from a non-uniform spatial distribution of nodes.
+% On the other hand, Erd\"os-Renyi (ER) random graphs have peaked degree distribution similar to random geometric graphs and FDL results in fairly uniform distribution of nodes in space (One could argue that any ER graph is a random geometric graph, just in a high dimensional space).  
+% Based on this, 3D random geometric graphs must behave similar to random graphs. 
+
+\end{response}
+
+\newpage
+
+\Reviewer{\#2}
+\begin{response}{The authors examine the implications of spatial constraints (non crossing conditions of links and nodes) on the topology of networks embedded in a 3-dimensional space. 
+Their main finding is that, depending on the link thickness ($r_L$), there exists two different phases with different geometrical properties, separated by a second order phase transition point occurring at a critical value $r_c$, which is approximated analytically. 
+Physical properties of the network are shown to be substantially different in the two phases, and universality is claimed at the critical point. 
+}
+
+We thank the Referee for the succinct summary of our main findings. 
+\end{response}
+
+
+\noindent
+Main points:
+\begin{response}{
+1) The main analytical result of this work is the estimation of the critical radius in Eq.(4). 
+The simple argument given in the main text is not satisfactory. 
+The argument given by the authors disregards completely the heterogeneity in the density profiles of nodes and links, which are instead assumed to be uniform over the space. 
+For example, in a scale free network, the density of links will be much higher near a hub node than low degree nodes, and these fluctuations may be strong enough to invalidate the argument used to derive Eq.(4), which assumes the same density around every node for example, in a scale free network with degree exponent $\gamma=2$, all links are basically 
+attached to a single node (i.e. the node with largest degree), while in a 3D lattice they are evenly distributed across all nodes. Therefore, I do not see how the critical value $r_c$ cannot be sensitive to the value of the degree exponent $\gamma$, and thus on the network topology. Since the authors claim a "deep" universality, their main analytical finding Eq.(4) does not follow from this claim.
+
+}
+\outNim{
+\begin{figure}
+    \centering
+    % \includegraphics[width=\textwidth]{fig-09-19/phase-collapse-041018-3.png}
+    % \includegraphics[width=\textwidth]{fig-09-19/phase-collapse-041018-3R.png}
+    % \includegraphics[width=.6\textwidth]{fig-09-19/phase-lat-040918.png}
+    % \includegraphics[width=\textwidth]{fig-09-19/phase-collapse-042018.png}
+    % \includegraphics[width=.6\textwidth]{fig-09-19/phase-lattice-042018-l.png}
+    \includegraphics[width=\textwidth]{fig-09-19/phase-collapse-042018-prefactor.png}
+    \caption{{\bf Phase transition vs Topology:} The new order parameter $\phi(r_L)\equiv d\log\be{l} /d\log r_L$ captures well the phase underlying phase transition, where $\be{l}$ is the average link length and $r_N$ is constant.
+    We find that $\phi (r_L) $ is zero deep in the weak phase and it approaches $1$ deep in the strongly interacting phase. 
+    While scale-free or random networks of various sizes display transitions at different values of $r_L/r_N$ (left), scaling by the predicted transition point $\tilde{r_c}=r^c_L/r_N = \sqrt{\alpha/c}N^{1/3} L^{1/2}$ collapses the curves into a single curve which (middle), which can be fit very well by a logistic curve (in terms of $ \log(r_L/r_N/\tilde{r}_c)$) passing through (1,0.5) point (red dot). 
+    Note, the $\sqrt{\alpha/c}$ pre-factor emerges from our new derivation.  
+    In comparison, omitting this pre-factor (right) results in a slightly inaccurate prediction of the transition point, though the curves still collapse on a single curve.
+    %
+    % Scaling by both the asymptotic (thermodynamic limit) solution (top, middle) and the full degree dependent transition collapses the curves very well and moves the transition point to 1 on the $x$ axis (the red dot is at $x=1,y=1/2$).
+    % Lattices (Bottom) of all sizes have the same transition point, because once the unit cell has undergone a phase transition the whole lattice undergoes the same transition. 
+    % This is due to the translation symmetry of lattices, a feature that should also be present in random geometric graphs. 
+    %
+    %
+    % Here we are showing a related order parameter The order parameter using the elastic potential $\psi(r_L)\equiv d\log V_{el} /d\log r_L$. 
+    % If we start from the perfect lattice layout, the layout remains a lattice only gets slightly distorted at large $r_L$. 
+    % The transition behavior in lattices is almost independent of the lattice size. 
+    % 
+    }
+    \label{fig:phase-collapse}
+\end{figure}
+}%%%%%%
+The Referee raises a very important point: How does the degree heterogeneity affect the layout and the resulting phase transition? 
+As the Referee correctly notes, near a hub we often need to fit orders of magnitude more links than near a small degree node. 
+%This is one of the reasons we have scaled the node sizes in the visualizations (see SI 7). 
+Following the Referee's insight, we have now derived  the transition point in a way that it accounts for the effect of degree heterogeneity. 
+While the previous formula represents a mean-field result, the new derivation explicitly considers the volume of links emerging from each node of degree $k$. 
+% Since the links must connect to the center of the node, they will overlap up to a radius $r_0 \sim \sqrt{k}r_L$ around the node. 
+% In other words, the volume of the sphere of radius $r_0\sim \sqrt{k}r_L$ plus the approximately cylindrical volume of the links determines the total link volume ({\color{red}SI 9.2, Eq. SI.55}).
+When this volume becomes comparable to the volume of close-packed nodes, the system must undergo a layout transition to accommodate the links.
+{ 
+We, therefore, predict that the phase transition should occur at $\tilde{r}_c \equiv \be{\tilde{r}_c(k)}$, where the average is taken over the degree distribution, and the degree distribution dependent $\tilde{r}_c$ is   
+\outNim{
+\begin{align}
+    % \rho_+(k) 
+    % &=\frac{A^{\frac{2}{3}} + 12 a}{6 \sqrt[3]{- A}}, &
+    % A& = 12 \pr{9 b + \sqrt{(9b)^{2}- 12 a^{3} }}\cr
+    \tilde{r}_c(k) = {r^c_L\over r_N} 
+    &=\frac{6A^{{1\over 3}}}{A^{\frac{2}{3}} + 12 B}, &A& =- 12 \pr{{ 3k^{3/2}\over \alpha } + \sqrt{{ 9 k^{3}\over \alpha^2 }- 12 B^3 }},\quad B = {c\over \alpha}{L\over N^{2/3}} \label{eq:trans-rc-full-1}
+\end{align}
+}
+\begin{align}
+    % \rho_+(k) 
+    % &=\frac{A^{\frac{2}{3}} + 12 a}{6 \sqrt[3]{- A}}, &
+    % A& = 12 \pr{9 b + \sqrt{(9b)^{2}- 12 a^{3} }}\cr
+    \tilde{r}_c(k) = {r^c_L\over r_N} 
+    &=\frac{6A^{{1\over 3}}}{A^{\frac{2}{3}} + 12 B}, &A& =- 12 \pr{{ 3\be{k^{3/2}}\over 2\alpha } + \sqrt{{ 9 \be{k^{3/2}}^2\over 4\alpha^2 }- 12 B^3 }},\quad B = {c'\over \alpha}{L\over N^{2/3}} \label{eq:trans-rc-full-1}
+\end{align}
+% where %$A =- {6\over \alpha } \pr{{ 3\be{k^{3/2}}} + \sqrt{{ 9 \be{k^{3/2}}^2 }- 48 \alpha^2 B^3 }}$ and $B = {c'\over \alpha}{L\over N^{2/3}}$. 
+% the constants $\alpha$ and $c'$ originate from close-packing of nodes and average length of links, respectively (see SI.10). 
+%, with $c' = {3\over 4}\pr{{3\sqrt{2} / \pi}}^{1/3}$. %\cdot  %c \approx 1.1 \times {3/ 4}$.
+% where $\alpha = 4\sqrt{2}/\pi $ comes from close-packing of spheres in 3D
+where $\alpha = 4\sqrt{2}/\pi $ comes from close-packing of spheres in 3D and $c' = \pr{{3\sqrt{2} / \pi}}^{1/3} c$ (see SI.10). 
+Here $c = O(1)$ depends on the distribution of linked nodes. 
+%}%%%blue
+For $\gamma = 2$, Erd\"os-Renyi (ER) and a star-shaped network we obtain $c = 3/4$. 
+% From \eqref{eq:trans-rc-full-1} we obtain the transition point by averaging over the degree distribution. 
+Note that in the thermodynamic limit of dense networks ($N\to \infty$ and $L\sim O(N^2)$) Eq.\eqref{eq:trans-rc-full-1} reduces to our previous mean-field approximation $\tilde{r}_c = \sqrt{{\alpha \over c'}} N^{1/3}L^{-1/2}$ ({SI 10.C}), with the addition of the prefactor, which was lacking in our earlier derivation.
+}%%%%%%
+\outNim{
+Most importantly, \eqref{eq:trans-rc-full-1} can be  used to estimate finite-size effects due to degree heterogeneity by finding the standard deviation of $\tilde{r}_c(k)$ over the degree distribution. 
+By doing so, we are now able to predict the finite region in the phase space where the phase transition takes place. 
+We have updated the phase diagram to reflect this new result (Fig. 2). 
+}%%%%
+
+% {\color{red} Table or plot of transition points and width for BA and ER. }
+% Note that $\sqrt{\alpha/c} \approx 1.55$ for ER and star-shaped networks. 
+% We find that even for small networks (50-200 nodes and up to 1,200 links) the asymptotic (thermodynamic limit) $\tilde{r}_c$ predicts the transition point very accurately (Fig. \ref{fig:phase-collapse}). % and it is largely indistinguishable from the $k$-dependent solution. 
+%It is also important to note that the collapse of the curves becomes accurate only when the prefactor $\sqrt{\alpha/c}$ is  included in $\tilde{r}_c$.
+%The main benefit of  $\tilde{r}_c(k)$ is that it allows us to derive the finite transition region. 
+
+In conclusion, we wish to thank the Referee for raising this crucial point about the effect of degree heterogeneity, which led us to a more rigorous and precise derivation of the phase transition point. %, as well as to discovery of special cases about lattices and RGG. 
+% Additionally it allowed us to compute finite-size scaling effects, which we discuss below.
+We have now changed the paper in multiple places to reflect these new results. 
+
+\end{response}
+\begin{response}{
+2) Is the model in Eq.(1) a new model or has been already used in the literature? In the latter case, please provide a reference for the model Eq.(1). 
+}
+The model in Eq. (1) has not been explored before -- it is new, built to address the specific features of an elastic network. 
+It is inspired by models employed in self-avoiding polymer chains \cite{des1974lagrangian} and manifold dynamics \cite{mezard1991replica}, but those contian different terms. 
+Given the network structure of the problem, there are major formal differences, and the phase transition in the layout that we explore is also unique to a network system, 
+where the link weights can change (weight is not a relevant parameter in polymers or manifolds).
+% Note also that without $V_{LL}$ and after replacing $V_{el}$ with the elastic energy of a spring the model reduces to the potential energy of a Force-directed layout with short-range node repulsion. 
+
+In response to the Referee's question, we made sure to clarify the novelty of the model and its relation to other models, with the appropriate references.
+\end{response}
+\begin{response}{
+3) What does it mean "the lowest energy solution of (1)"? Equation (1) is just the definition of the potential energy. Perhaps the authors meant the solution to the equation grad V = 0. Is that right?
+}
+The lowest energy state of the potential, corresponds to the ideal layout. 
+But finding the global minimum is NP hard, so we resort to gradient descent, which uses $\del V=0$, as noted by the Referee. % as we will explain here. 
+% Indeed, we want to minimize the distance of nodes that are connected to each other while avoiding node and link crossing. 
+% Long links have a large elastic energy $V_{el}$, and crossing nodes and links have high values of $V_{NN}$ and $V_{LL}$ respectively. 
+% The configuration with minimum $V$ is the most desirable one. 
+Gradient descent with noise (simulated annealing, Eqs.(2,3)) that we implemented, locates a local minimum, which satisfies $\del V = 0$. 
+The noise helps us to escape local minima with high $V$. % due to the noise. 
+\end{response}
+\begin{response}{
+4) The data collapse in Fig.1G looks quite poor, and the use of a log scale on the y-axis is misleading? I do not think this result can be taken as a confirmation of the scaling relation Eq. (4). 
+}
+\outNim{
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth]{fig-09-19/trans-collapse-dlog.png}
+    \includegraphics[width=\textwidth]{fig-09-19/trans-collapse-dlog2.png}
+    \caption{{\bf The slope of the average link length:} Top shows the derivative of average link length $\be{l}$ with respect to $\log(r_L/r_N)$. 
+    As we see, without rescaling (top left) the curves for different network sizes and topologies follow different trajectories. 
+    After rescaling by the predicted scaling of the transition point (top right), all the curves collapse to a single curve. 
+    Note the y-axis is in linear scale. 
+    Also, note that the slope is zero and starts becoming nonzero after the transition point. 
+    The bottom plots show the slope of the logarithms $d \log \be{l}/d \log (r_L/r_N)$. 
+    Again, before rescaling (bottom left) they differ, but after rescaling (right) they mostly collapse onto a single curve.
+    This plot (bottom right) also reveals that, although the log-log slope eventually reaches a universal constant for all of these networks, there is region around the predicted transition point where the slope is slowly increasing, possibly due to finite size scaling effects.  
+    }
+    \label{fig:collapse}
+\end{figure}
+}%%%%%%
+As the Referee points out, the average link length, $\be{l}$, we used in the previous version of the paper as order parameter, depends on the network size, hence the curves were not expected to  collapse in the $y$ direction.
+We have now followed the Referee's recommendation discussed in point 15 (see Figs. 2J,K,  SI.18%\ref{fig:phase-collapse}
+) and use a more appropriate order parameter, namely $d\log \be{l}/d\log r_L$, which is properly normalized by the total link length. 
+% This order parameter is zero in the weak phase and is one the strong phase, regardless of the network size. 
+With this order parameter we observe data collapse in both x and y directions, allowing us to numerically support the new derivation of the transition point (revised Fig.2), including its pre-factor (see also {Fig. SI.18}). 
+%While the average link length previously used in Fig. 1G only showed the collapse in the $x$ direction, it does not collapse in the $y$ direction, as the networks have different sizes. 
+% In the new version we use the derivative of the link length with respect to link thickness, $d\log\be{R}/d \log r_L$, which is zero in the weak phase and one the strong phase, regardless of network size. 
+% This, together with the more precise transition point calculation results in a much better collapse of the curves. 
+
+We wish to thank the Referee for this valid point, prompting us to use a better measure to quantify the phase transition, obtaining a consistent behavior for networks of all sizes. 
+The figure and the text have been changed accordingly. 
+
+
+\end{response}
+\begin{response}{
+5) The authors say that the average curvature remains constant in the weakly interacting regime. However, Fig.2C shows that it grows for the ELI model. How did they conclude that curvature remains constant in the weakly interacting regime of the ELI model?
+}
+% We will correct this statement. %which we previously believed would be accurate given the expectation that the increasing part of the curvature of ELI in the weak phase would be in the ``transition region'', meaning a part of phase space where the finite size effects have widened the transition point. 
+% Indeed, we
+%The finite size effects widen the transition point to a ``transition region'' which we 
+
+The new phase transition formula allows us to more accurately identify the transition region, which has a width $\sigma$, independent of the degree distribution, as lattice simulations show (Fig. 2K and Figs. SI. 19--23). 
+It is now obvious that this transition region
+($3\sigma$ above and below the transition point $\be{\tilde{r}_c}$, shown as a shaded area in the revised Fig. 2) should not be
+considered part of the strong or the weak phase. Contrary to our earlier expectation, the increasing
+part of ELI curvature continues to change in the weak phase, outside the transition region. 
+% So our earlier statement was incorrect.
+We thank the Referee for pointing out this confusing statement, that we corrected now, given
+our ability to analytically compute the regime affected by the finite size effects.
+
+\outNim{ 
+Upon more careful analysis, we now believe that the second order-like phase transition we observe is actually a glass transition \cite{gibbs1958nature} (SI 10.D).
+The main feature of a glass transition is that it is not sharp, occurring smoothly over a range of temperatures (i.e. $r_L/r_N$). 
+The width of the region is approximated well by the width $\sigma$ of a logistic or error function fit to the order parameter. 
+
+The new phase transition formula allows us to more accurately identify the transition region and to predict and measure the fluctuations $\sigma = STD[\tilde{r}_c(k)]$. 
+It is now obvious that this transition region ($3\sigma$ above and below the mean $\be{\tilde{r}_c}$, shown as a shaded area in the revised Fig. 2) should not be considered part of the strong or the weak phase.
+Contrary to our earlier expectation, the increasing part of ELI curvature continues to change in the weak phase, outside the transition region. 
+So our earlier statement was incorrect. 
+% We have, therefore, corrected the statement about it.
+% Thus, the weak region is only up to the shaded region, and the curvature is constant there, both in ELI and FUEL.
+% We now have a higher quality phase diagram and we have changed the text accordingly. 
+Glass transition would also be consistent with the fact that our networks behave like gels in the strong phase, and like amorphous solids (glass) in the weak phase.
+}%%%%
+
+% We thank the Referee for pointing out this confusing statement, that we corrected now, helped by our ability to analytically compute the regime affected by the finite size effects.   
+ 
+\end{response}
+\begin{response}{
+6) the peak in the relaxation time is observed only for the FUEL model, but it does not appear in the ELI model (or, at least, there is too much noise to see a peak). 
+Therefore, how the authors conclude that the ELI model undergoes a phase transition? 
+}
+
+After fine-tuning the simulation parameters, we learned that some of the ELI simulations in the previous version of this figure had not converged. 
+Improvements in the code allow us to run them more effectively, so the peaks are now visible in both cases. 
+In the revised version, Fig. 2D, both ELI and FUEL exhibit a peak in the relaxation time at the  transition point.
+%in the weak phase suffered from numerical instabilities which prevented the simulation from converging, resulting in exceptionally long relaxation times. 
+
+
+\end{response}
+\begin{response}{
+7) The 'strong' peak in the relaxation time can be hardly considered as strong. What is the size of the network used? Can the author further support the claim of a phase transition with additional analysis (e.g. a finite size effect analysis)?
+
+}
+This point by the Referee was very valuable and crucial for the paper.
+Prompted also by the earlier comments, we have now evaluated how the transition region scales with network size, as well as the role of the degree distribution. 
+The size of the peak depends on the stopping criteria for the simulations. 
+With an improved stopping criteria, the relaxation time now shows a prominent peak in the transition region.
+\outNim{ 
+Also, the peak in glass transition is not as sharp as the peak in a genuine second-order transition. 
+}%%%
+
+% Using consistent and network size independent stopping conditions, we can measure the scaling of the peak with the size of the network.
+
+
+
+\end{response}
+\begin{response}{
+8) How can this method be scaled for large networks? The networks shown are very small (N=20, 40, 100, 200). How can this method be used in practice with networks of thousands or million nodes? Simulating annealing does not seem to me a viable route. What is the scalable and efficient algorithm that can be used for larger networks. 
+}
+This is an important point, and we made important advances since submission to scale the method up. 
+With the current code, running on an NVIDIA GPU, a network with a few hundred links takes a few second in the weak phase and about ten minutes in the strong phase. 
+% A network with 1,000 links in the strong phase may take one to two hours.
+The largest network that we have tried so far captures the wiring of the white matter of the mouse brain, with 20,000 links, which took about a week prior to the recent improvements in the algorithm (Fig.\ref{fig:brain}). 
+In principle, just like any molecular dynamics simulation, the model can be run on distributed systems, split among multiple computers in a cluster and combined through a central server. 
+Thus, there is no inherent limitation as to how large a network can be simulated. 
+% Using our current implementation in python, a network with ten thousand nodes and links can be run on the CPU of a desktop computer with more than 8GB RAM in less than a week. 
+% If a CUDA compatible NVIDIA GPU is present on the computer, it would take one to two days. 
+% Notably, since our forces are short-range, the complexity of the problem can be reduced significantly from the brute-force $O(N^2)$ or $O(L^2)$, down to $O(N^{3/2})$ and $O(L^{3/2})$, respectively (see SI.8). 
+
+\begin{figure}[ht]
+    \centering
+    % \includegraphics[width=\textwidth]{fig-09-19/brain-3.pdf}
+    \includegraphics[width=.6\textwidth]{fig-09-19/mouse-brain-20k-top.png}
+    \caption{
+    \scriptsize
+    {\bf Modeling the Mouse Brain White Matter Connectivity:} 
+    The Mouse Brain Atlas data, collected by the Allen Institute, records the trajectories of millions of axon bundles in the white matter of the mouse brain, connecting different regions of the gray matter. 
+    We combine these axon bundles to find the total connectivity of large anatomical brain regions, yielding a weighted network of brain regions as nodes and trajectories of bundles as links. 
+    We then keep solely the weights (used as link thicknesses) and the location of brain regions (used as nodes) and
+    use this weighted network as the input for ELI to generate simulated mouse brains with optimized wiring in 3D. 
+    These models serve as null models to compare against the actual trajectories and to answer questions regarding optimality of the white matter connectivity. 
+    % Depending on the level of detail by which we define anatomical regions in the brain, we obtain different coarse-grained networks of brain connectivity.
+    The figure shows the top view of a simulation, where 20,000 weighted links connect about 700 brain regions . %at this level of bundling. 
+    % (A) shows the highest level (maximum bundling) with large brain regions with 700 links, while (B) shows one lower level in hierarchy of brian regions, yielding 20,000 links.  
+    }
+    \label{fig:brain}
+\end{figure}
+
+While the brute force method scales as $O(L^2)$ for every iteration, our improved code reduced this to $O(L^{3/2})$ ({see SI 8}) by exploiting the short range of interactions. 
+Examples with the best working settings are provided in the code which is available online. 
+
+In response to the Referee's comment we have now added the more efficient code to Github. %and discuss scalability in {\color{red}SI 8}.
+We also mention the code's computational complexity in the manuscript and added a section SI 8.C to the supplemental information that discusses the scalability of the model in detail.
+%The code can also be run on the CPU on machines that do not have a GPU.
+%We can provide more details about the settings together with the simulation code at the Referee's request. 
+\end{response}
+\begin{response}{
+9) What is the role of the radius of nodes $r_N$? It looks like it does not play any role in the critical behavior of the model. 
+}
+The Referee is correct -- $r_N$ does not play a key role, as only the $r_L/r_N$ ratio matters.
+Indeed, we defined the observed phase in terms of a dimensionless parameter, such as $r_L/r_N$, to allow us to compare networks with different number of nodes and links. 
+%Instead of varying $r_L$ we could also vary $r_N$ and the results are equivalent. 
+
+\end{response}
+\begin{response}{
+10) What is the role of the dimension of the space D? Does the transition disappears in the large D limit, where the non crossing conditions are no more a issue? Is the transition a genuine feature of a 3 dimensional embedding space?
+}
+The observed transition is indeed a genuine feature of 3D,
+% The dimension does play a key role, but all the distances in Eq.(1), such as $|x_l-x_m|$ do generalize to $D$ dimensions. 
+as the Referee notes. 
+In an arbitrary $D$ dimensional space, a node has an exclusion region of the form of a $D$-dimensional sphere and the cross-section of a link is $S_{D-1}$, the spherical shell, or boundary of a $D$-dimensional ball. 
+The crossings, however, relate to the Referee's question 13 about the knots, because the links remain effectively 1D objects.
+If we consider two thin links, in $D>3$ they can always pass by each other. 
+This is because if one considers the segment of links 1 and 2 near the crossing, the segment from link 1 can be embedded in dimensions $(x_1,x_2)$, and the segment from link 2 in dimensions $(x_3,x_4)$. 
+This makes links 1 and 2 invisible to each other and allows them to resolve the crossing by moving away from the crossing area (which is why knot theory for 1D curves only exists in 3D \cite{zeeman1963unknotting}, and in general knotted $n$-spheres can be untied in $n+2$ dimensions). 
+So, $D=3$ is the lowest dimension where any crossing can be resolved and also the highest dimension where it is a problem at all.
+Yet, as we do live in 3D, the phase transition reported in the paper remains highly relevant to us. 
+We have added a discussion to the paper about this key issue, and we wish to thank the Referee for prompting us to address it. 
+\end{response}
+\begin{response}{
+11) Mammalian Brains: In the last paragraph of the article, the authors state that the methods offered a modeling framework to capture the layout geometry of dense neuronal networks. However, the model described in the article is different from actual neural networks. Although the neurons are densely packed, the length of axon is still much larger than the size of neuron. The evidence of length scale is not strong enough to support the statement. 
+
+
+}
+% We did not want to go into the detail of this in the paper, but 
+We fully agree with the Referee that there are important anatomical differences between neurons
+and the canonical network model we discuss in the paper. 
+While %we fully agree with the Referee that 
+these anatomical differences do affect the specific layout, we believe that they do not affect the scaling properties. 
+Indeed, we may not have been clear about the network  representation normally employed in the context of the brain.
+In line with the prevailing practice, we represent the mammalian brain at a lower resolution, taking anatomical region as nodes (instead of individual neurons) and bundles of axons going from one region to another as links (instead of individual axons). 
+Indeed, there is direct experimental evidence that 
+% most axons in the white matter follow a trajectory established by ``pioneer axons'' 
+much of the white matter consists of large bundles of axons \cite{raper2010cellular}.
+There are a few hundred anatomical regions in the gray matter, and at the available resolution the thickness of the white matter axon bundles (links) connecting various regions are comparable to the size of the gray matter regions (nodes), 
+indicating that the network is in the strongly interacting phase described in the paper. 
+The fact that the scaling predicted for the strongly interacting phase agrees with the empirical data collected in brain science offers, as we discuss in the paper, evidence of the validity of the modelling framework we consider. 
+
+We wish to thank the Referee for highlighting our lack of clarity on this issue. We have modified the paragraph, to explicitly discuss the network we explore. 
+% We do agree that scaling alone does not prove a mechanistic relation. 
+% However, what is significant is the different scaling observed for the rodent and primate brains: our findings indicate that while the rodent brain {\em is} compatible with the strong phase, the primate brain is not. 
+% This suggests that to understand the primate brain we must consider other network characteristics, perhaps unique to the underlying neural networks. 
+% At the same time, the observation also suggests that our model might be suitable for analyzing the structure of rodent brains without much modification. 
+% We are indeed doing so now. 
+
+\end{response}
+
+Minor points: 
+\begin{response}{
+12) Fig. 1D, E, F, G are called after Fig.2. 
+}
+Thank you for pointing this out. 
+We have changed the order of the figures to fix this. 
+% Yes, we tried to find the best way to start talking about the phase transition and decided the best use of space for figures would be to group it in the first figure. 
+% We can certainly change that. 
+
+
+\end{response}
+\begin{response}{
+13) Twists and Knots: In physical network, especially for weak interaction networks with length of link >> size of node, there will be a large probability that link will twists or even have knots. Such structures could largely affect the properties of network since in this case, the links are not weakly interacting anymore. 
+
+According to the modeling framework, the annealing algorithm proposed will likely remove the existence of twists and knots by the introduction of local approximation and thermo-noise. How the algorithm affects the topology of the resulting network? For example, start with a simple loose structure with knots or twists between links and see how the topology changed according to different level of noise or thickness of links. Or explain the limitations of the model if it is hard to simulated the network with topological complexity.
+}
+
+Very good point. 
+% We have indeed worked on this, but initially decided not to include the results in this paper. 
+%We intend to write a separate paper discussing the rich space of topological states that are predicted by this model. 
+% Briefly, 
+%The short answer is, 
+% in 
+As the Referee correctly notes, for
+a truly continuous link with infinite hard-core repulsion %we cannot resolve the knots, nor is it possible for 
+the links can not pass through each other to find more favorable configurations. 
+In Eq.(1) we made the repulsive forces smooth analytical functions with finite maximum repulsive force. 
+This allows nodes and links to tunnel through each other with a suitable amount of thermal noise.
+However, when the noise amplitude is large (above $r_L$) and the 
+% annealing schedule is such that the
+noise persists longer than the relaxation time, we do observe many twists and knots. 
+In addition, we observe ``kinks'' and ``solitons'', best seen when laying out 3D lattices (Fig. \ref{fig:twist}).
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=.8\textwidth]{fig-09-19/3D-twist.pdf}
+    \caption{{\bf Solitonic solutions:} A frequent outcome of laying out networks with discrete symmetries, such as 3D lattices due to reflection symmetry, are topological defects: the orientation of two ends of the lattice may be different (A, red arrows pointing to the fact that the orientation of the lattice along the y direction has switched from one end of the layout to the other), resulting in a twist in the middle of the layout. 
+    (B) A clearer view of a twist. 
+    Twists, like other solitonic solutions, are generally localized, increasing the total link lengths only by a small amount. 
+    As a result, these solitonic solutions have energies close to the global minimum.
+    They are encountered frequently during simulated annealing. 
+    %because of their high degeneracy: the twist may occur anywhere in the lattice and its energy is related to its size. 
+    }
+    \label{fig:twist}
+\end{figure}
+The underlying mechanism is similar to the one observed in regular solitons: there are multiple global minima for $V$ which are related to each other via discrete symmetries, such as reflection in the $x$ direction. 
+During the dynamics one side of the network may fall into one minimum configuration and the other side into the reflected configuration, also corresponding to a similar minimum, resulting in a twist at the boundary of the two layouts. %somewhere in the layout. 
+These solitonic solutions are still low energy solutions. 
+Even though they are not a global minimum, their energy is very close to the global minimum.
+\outNim{
+and their number is more plentiful than the global minima because of the combinatorics. 
+In fact, most layouts of the 3D lattice, including the ones used for Fig.2 turn out to have such twists, but in the log-scale, $\be{l}$ and curvature seem to be similar among them, suggesting that they belong to approximately degenerate energy states. 
+We would be happy to discuss this further. 
+}%%%%
+We have added a section in SI 8 to discuss these phenomena. 
+\end{response}
+\begin{response}{
+15) Distribution of link length or curvature. Average link length is an important order parameter of phase transition. Instead of characterizing the order transition by a simple average, I suggest the authors to investigate the change of distribution of link length which will provide more details about how the transition happened.
+}
+This is a very important proposal. 
+We did just that, changing the order parameter from $\be{l}$ to $d\log \be{l} /d \log r_L$, obtaining much better results for the transition, as explained in point 4.
+We wish to thank the Referee for this clever suggestion, that has significantly improved the evidence we offer.
+% We did explore distributions of forces in relation with the stress, but they differ across different topologies in the weak exclusion phase.
+% We couldn't find a reasonable universal measure that works across different topologies and at the same time found that the phase behavior had almost no dependence on the topology. 
+
+\end{response}
+
+
+Finally, we would like to express our sincere gratitude to Referee 2 for the detailed, invaluable and very enlightening comments. 
+They led to vast improvements of our paper and a deeper understanding of the problem.
+We are also very excited about the developments the comments led to. % and are delighted to share them with you once again. 
+% We hope that you find them informative and deeply appreciate the time that you and the Referees spend analyzing our paper.
+
+\bibliographystyle{plain}
+\bibliography{mybib}
+
+\end{document}
+~\newpage
+~\newpage
+
+\section{Add to Main Text}
+
+\subsection{Computational Complexity}
+If each link had $s$ segments, the  complexity of calculating the elastic forces will be $O(sL)$.
+The brute-force complexity of node repulsion is $O(N^2)$ and link repulsion $O(s^2L^2)$.
+Since for a connected network $L\geq N-1$ and $s>1$, the complexity is mostly due to link repulsion. 
+We can reduce this complexity by realizing that we only need short-range link repulsion to avoid crossings, allowing us to partition the space into cells of size $ar_L$ with $10>a>2$ and calculate link crossings in these cells only, as the repulsive forces between links farther than $ar_L$ will be exponentially small.
+To be specific, if the layout is broken into $k$ cubic cells, each cell contains $sL/k$ link segments, on average, and so the total number of pair interactions has complexity
+$O(k\times s^2L^2/k^2 ) = O(s^2L^2/k)$ (SI 8.C). 
+A fixed minimum number of cells, $k$, is desirable at early stages as links may be very densely packed and a cell of size $ar_L$ may contain too many segments, resulting in memory shortage from storing the $O(s^2L^2)$ interaction matrix in the worst case. 
+When the system has opened up sufficiently, we can break the layout into cells of fixed size $ar_L$ and index which segments of which links cross each cell. 
+The indexing is $O(sL)$ and is updated every few iterations, depending on the magnitude of forces.
+% After the indexing, a cubic cell with side $ar_L$ contains $O(a^3)$ link segments in the worst case. 
+We only need to calculate forces in cells that contain more than one link.
+We also shift the cells randomly for each indexing event to remove biases at the cell walls. 
+
+
+In the weak phase using cells speeds up calculations enormously, as the number of crossings is very few and so cells crossed by more than one link are very few. 
+Thus the total complexity will be either $O(N^2)$ from brute-force node repulsion or $O(sL)$ from indexing link segments and elastic forces, depending on which one is bigger.
+In the strong phase, the links are filling the space.
+But, as links can shrink and stretch, both with no link self-repulsion (Eq.(1)) and the double-ellipsoid potential (SI 4.C Eq.(32)) the number of link segments within one cell can vary from $1$ segment per cell to $O(s)$ per cell in the worst case.
+A cell of size $ar_L$ contains a maximum of $O(a^3)$ distinct links. 
+Since links can shrink and stretch, the number of segments of each link that falls in each cell can vary. 
+In the best case, a cell has $1$ segment per link, and in the worst case it contains all $s$ segments.
+Thus, in the worst case one cell may have $O\pr{(sa^3)^2}$ pairs of interacting link segments. 
+The number $n_a$ of spatial cells with links crossing through them can be estimated from the size of the layout. 
+The cross-section of all the links when the layout has opened up is $R\sim L^{1/2} r_L$ and so dividing by the cell size $ar_L$, the number of cells becomes $n_a \sim O\pr{\pr{L^{1/2}/a}^3}$. 
+Therefore, the worst case time complexity is 
+\[n_a O\pr{(sa^3)^2} \sim  O\pr{{ s^2 a^3  L^{3/2} } } \]
+In practice, because the number of pairs $s^2 a^6$ in a cell may become large, we randomly sample up to a maximum number of pairs $\sim \max (100, s^2 a^3)$ in each cell to calculate the repulsive forces and the elastic forces help move the rest of the link segments to the correct positions. 
+This way, for large networks the complexity is mostly due to number of cells $O(L^{3/2}/a^3)$.
+Our algorithm starts with a minimum number of cells $k$ and switches to cells of fixed size $ar_L$ once the network has opened up enough so that more than $k$ cells are occupied by more than one link. 
+
+As in the weak phase link crossings are rare, most cells will contain a single link.
+Thus, in the weak phase partitioning the space reduces the complexity of link repulsion so much that it may become less than the brute-force complexity of node repulsion, $O(N^2)$.
+Therefore,  with partitioning the time complexity in the weak phase will be $\max\{O(N^2),O(sL)\}$, where $O(sL)$ is the complexity of partitioning the space (same as the elastic forces).
+In practice, we do not partition the space in every iteration, rather every 50-100 steps. 
+
+
+\subsection{Star-shaped Network}
+Consider a star network: 
+Node 1 is at the center and all other $N-1$ nodes are only connected to node 1. 
+Note that we have a short-range repulsion between nodes, independent of their degree, resulting in exclusion radius $r_N$ around each node. 
+The tightest way to pack the $N$ nodes of this star network is a 3D close-packing of spheres, which results in a radius $R_N\sim N^{1/3}r_N$.
+We have $L=N-1$ links going out at all angles but also ending on the nodes.
+Let us calculate the average link length to see how much volume these link with thickness $r_L$ occupy. 
+The mean link radius is simply the average of node location in a sphere of radius $R_N$ 
+
+\begin{align}
+    R_L =  \frac{4\pi \int_0^{R_N} r^3dr }{\int_0^{R_N} 4\pi r^2 dr} = {3\over 4} R_N
+    \label{eq:RL}
+\end{align}
+Therefore the total volume of links will be $V_L = \pi L r_L^2 R_L \approx 3\pi/4 L R_N r_L^2 $ when this volume is comparable to the total node volume $V_N = 4\pi/3 R_N^3$, the number of links pressing against each other becomes substantial and the phase transition occurs when
+%
+\[ {r_L\over r_N} = {3\over 4} N^{1/3}L^{-1/2}\]
+%
+Of course, the node layout that FDL will find won't be a perfect close-packing of spheres, but it will come close to it.
+So, as expected, up to the numerical factor of $4/3$ our prediction for the phase transition is seems correct.
+
+
+\subsection{Phase Transition}
+
+In some cases the phase transition can be worked out explicitly. 
+But first we need to understand the fundamental concept that leads to the transition. 
+The behavior of the system changes when link volumes become so large that they push nodes apart. 
+But links that are coming out of a point-like node will inevitably cross each other. 
+For a node of degree $k$ and with link thickness $r_L$, the region where the crossings of links exiting this node is unavoidable can be found by considering the sphere with minimum radius $r_0$ around the node outside of which links do not overlap any more. 
+On the surface of this sphere, all links are barely touching each other. 
+So, the surface area of the sphere is covered by the total cross-section of the $k$ links. 
+Naively, this will mean 
+\[4\pi r_0^2 \approx k \pi r_L^2,\qquad \Rightarrow \qquad r_0 \approx {\sqrt{k}\over 2} r_L  \]
+A slightly more accurate value for $k\gg 1$ can be found by realizing that the link cross-sections will arrange in a hexagonal lattice on the surface of the sphere and so the area occupied by each link is $2\sqrt{3} r_L^2$ instead of $\pi r_L^2$. 
+Therefore
+\[r_0 \approx  \sqrt{{ \sqrt{3} k \over 2\pi }} r_L \approx {\sqrt{k}\over 1.9 } r_L\]
+which is not very different from the first approximation. 
+$r_0$ is the minimum radius above which links will have enough space. 
+Thus, if $r_0$ becomes comparable to the radius of the network based on close-packing the nodes, i.e. $R\sim N^{1/3} r_N$, the layout will transition to strong interaction phase. 
+However, we need to consider the fact that not all nodes connected to the central node will be a distance larger than $r_0$ away from it. 
+%In the star-shaped network the number of links is $L=N-1$ and 
+Based on this, the minimum size of a region over which we look for crossings around a degree $k$ nodes must be larger than $r_0(k,r_L)$.
+
+
+To find where the phase transition occurs, the first thing to check is how the volume of the links compares to the total volume of nodes. 
+When they become comparable, the phase transition is inevitable. 
+It may happen that density heterogeneity affects this, and we will work this case out as well.
+But first, we consider the whole network.  
+When link thickness is $r_L$, the $N$ links around the center hub can avoid each other only above a radius $r_0 = k^{1/2}_{\max} r_L /2 $ (SI 10). 
+In the weak phase, the total radius of the layout (assuming the network is not much longer in one direction than other directions) $R_N \sim N^{1/3} r_N$. 
+For a node of degree $k$ we have
+\begin{align}
+    r_0 & ={1\over 2}  k^{1/2} r_L, \quad R_L = c R_N \cr  
+    V_L & = \pi k r_L^2 (R_L-r_0) + {4\pi\over 3} r_0^3 \cr 
+    &= c\pi k R_N r_L^2 %+\pr{ {1\over 6}- {1\over 2} } \pi 
+    - { \pi \over 3}k^{3/2} r_L^3  
+    \label{eq:VL}
+\end{align}
+This expression for the link volume will be valid as long as the second term is smaller than the first, meaning
+\[c N^{1/3} r_N >{\pi\over 3} k_{\max}^{1/2} r_L\]
+so that the overlapping volume is not occupying the whole layout. 
+This condition and the condition for the node volumes $V_N$ becoming comparable to the link volumes will determine the phase transition, depending on which one occurs at smaller $r_L/r_N$ ratio. 
+Thus, for a node of degree $k$ we have
+\begin{align}
+    \alpha \pi N r_N^3 &\approx \pi r_L^3 \pr{c N^{1/3}L  {r_N \over r_L} 
+    - { 1\over 3}N {k^{3/2}}}\cr 
+    0 &= \alpha N \pr{{r_N\over r_L}}^3 -c N^{1/3} L  {r_N \over r_L} 
+    + { 1\over 3}N {k^{3/2}} 
+\end{align}
+where $\alpha $ depends on how the spherical nodes are packed.
+The volume occupied by $N$ close-packed spheres is not $4\pi N /3 r_N^3$, rather $4\sqrt{2} N r_N^3$ because spheres can occupy a maximum fraction of $3\pi/\sqrt{2}$ of the volume. 
+So, in this case $\alpha = 4\sqrt{2}/\pi \approx 1.8$. 
+In this case, it follows that 
+\begin{align}
+    0 &= \alpha \pr{{r_N\over r_L}}^3 -c N^{-2/3} L  {r_N \over r_L} 
+    + { 1\over 3} {k^{3/2}} % 2^{5/2} 
+    \label{eq:trans-full}
+\end{align}
+
+\subsubsection{Location and Width of the Transition Region}
+From \eqref{eq:trans-full} we see that nodes with different degrees satisfy the condition at different $r_L/r_N$ ratios. 
+In fact, the degree becomes irrelevant only in the limit of $N^{-2/3} L \to \infty$, which is satisfied for any connected graph when $N\to \infty$, because $L> N-1$ and so $N^{-2/3} L > N^{1/3}$.  
+Thus, the asymptotic solution becomes
+\begin{align}
+    {r_L\over r_N} = \sqrt{{\alpha \over c}}%c^{-1/2} 2^{5/4} 
+    N^{1/3}L^{-1/2} %\approx 2.75 \times N^{1/3}L^{-1/2}
+\end{align}
+In Erd\"os-Renyi random graphs, the value of $c$ can be calculated form the uniformity of the connectivity \eqref{eq:RL} to be $c=3/4$. This yields 
+\[ \sqrt{{\alpha \over c}} \approx 1.55 \]
+which is close to one and so we can neglect the prefactor entirely. 
+Eq. \eqref{eq:trans-full} can also be solved exactly to get a more accurate estimate of the transition point. 
+It has the form 
+\begin{align}
+    &\rho^3 - a \rho + b =0 & a&= {c\over \alpha} N^{-2/3} L ,
+    \quad b={ k^{3/2}\over 3\alpha } 
+    \label{eq:rhoab}
+\end{align}
+with $\rho \equiv r_N/r_L$.
+Since the coefficient of $\rho^2$ is zero, the sum of its roots is zero, meaning that it has at least one positive and one negative root.
+Also, since the product of the three roots is $-b$ and since here $b= \be{k^{3/2}}/3>0$, we definitely have two positive roots and one negative root. 
+Finally, $-b = \rho_-(\rho_++\rho_0) +\rho_0\rho_+ <0$, with $(\rho_-,\rho_0,\rho_+)$ being the three roots in increasing order ($\rho_-<0$). 
+This results in 
+\[{1\over \rho_0} + {1\over \rho_+} > {1\over -\rho_-}\]
+Since each node must have at least one link, the transition must occur at $r_N \geq r_L$, as multiple links may be fitted around a single node and before $r_L$ becomes as large as $r_N$, the links will collide. 
+Thus, only the roots $\rho > 1$ are acceptable as a transition point. 
+
+The root $\rho_+(k)$ can be written out explicitly
+\begin{align}
+    \rho_+(k) %& =\frac{8 \sqrt[3]{2} \cdot 3^{\frac{2}{3}} b + \sqrt[3]{12} x^{\frac{2}{3}} \left(1 + \sqrt{3} i\right)^{2}}{12 \sqrt[3]{x} \left(1 + \sqrt{3} i\right)}\cr 
+    %&= \frac{8 \sqrt[3]{2} \cdot 3^{\frac{2}{3}} a + \sqrt[3]{12} A^{\frac{2}{3}}}{12 A^{\frac{1}{3}} }\cr
+    %&= \frac{- \alpha^{\frac{2}{3}} + \sqrt{3} i \alpha^{\frac{2}{3}} + 24 b}{6 \sqrt[3]{\alpha} \left(1 + \sqrt{3} i\right)} \cr
+    %&= \frac{ \alpha^{\frac{2}{3}} + 48 b}{12 \alpha^{\frac{1}{3}} } \cr
+    &=\frac{A^{\frac{2}{3}} + 12 a}{6 \sqrt[3]{- A}}, &
+    %A& = 2i^{{2\over 3}}\pr{9 b + \sqrt{3} \sqrt{- 4 a^{3} + 27 b^{2}}},\cr
+    A& = 12 \pr{9 b + \sqrt{(9b)^{2}- 12 a^{3} }}
+    \label{eq:trans-rc-full}
+\end{align}
+with $a,b$ same as \eqref{eq:rhoab}. 
+The overall transition point or the network is then the average of the roots over the degree distribution
+\begin{align}
+    \ba{\rho}_c = \be{\rho_0(k)}
+\end{align}
+Similarly, the width of the transition region around $\rho_c$ can be estimated from the standard deviation $STD[\rho_0(k)]$, again, evaluated using the degree distribution.
+
+
+
+\subsubsection{The width of the transition region}
+Another factor that we wish to examine is how much the heterogeneity in the degrees affects the spread of the transition. 
+The roots of \eqref{eq:trans-full} are a function of the 
+
+
+
+
+\subsection{Random Graphs}
+In Erd\"os-Renyi random graphs, the value of $c$ can be calculated form the uniformity of the connectivity \eqref{eq:RL} to be $c=3/4$. 
+
+
+\outNim{
+\subsubsection{General Comparison of Conditions}
+We wish to find out which of the following two conditions occurs at smaller $r_L/r_N$ ratio: 1) total node volume becomes comparable to leading term of link volumes; 2) link exclusion volume becomes considerable. 
+}
+
+\subsubsection{Transition in Lattice and Random Geometric Graphs}
+A key point about Lattices and random geometric graphs (RGG) is that their optimal layouts are approximately translationally invariant, meaning that they consist of similar unit cells repeating themselves. 
+For instance, if a lattice or RGG consists of $M$ similar unit cells, each contains $N_c = N/M$ nodes and $L_c=L/M$ links. 
+For each unit cell, the previously derived condition for a phase transition was 
+\[{r_L\over r_N} \sim L_c^{-1/2} N_c^{1/3} = M^{-1/6} L^{-1/2} N^{1/3} \]
+Since in a lattice the number of nodes in a unit cell is a fixed number $C$, the number of cells is actually a function of the number of nodes and this changes the scaling law to 
+\[{r_L\over r_N} \sim \pr{{N\over C}}^{-1/6} L^{-1/2} N^{1/3} = C^{1/6} L^{-1/2} N^{1/6} \]
+For a small network with $N\sim 100$ the extra factor of $N^{1/6}\sim 2$ may not be considerable in a log-log plot, but it can be measured in a large lattice or RGG. 
+
+%The other term to consider is the negative link exclusion term in \eqref{eq:VL}. 
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{fig-09-19/phase-collapse-040918.png}
+    \includegraphics[width=.6\textwidth]{fig-09-19/phase-lat-040918.png}
+    \caption{{\bf Phase transition vs Topology:} The quantity $\phi(r_L)\equiv d\log\be{R} /d\log r_L$ distinguishes well between the two phases  ($\be{R}$ being the average link length and keeping $r_N$ constant.)
+    $\phi (r_L) $ is zero deep in the weak phase and it approaches $1$ deep in the strongly interacting phase. 
+    While scale-free or random networks of various sizes network result in transitions occurring at different values of $r_L/r_N$ (Top, left), scaling by the predicted transition point $\tilde{r_c}=r^c_L/r_N$ collapses the curves well onto a single curve (Top, right).
+    Lattice (Bottom) behave differently than random and scale-freee networks. 
+    Lattice of all sizes have the same transition point, because once the unit cell has a phase transition the whole lattice udergoes a transition. 
+    % If we start from the perfect lattice layout, the layout remains a lattice only gets slightly distorted at large $r_L$. 
+    % The transition behavior in lattices is almost independent of the lattice size. 
+    % 
+    }
+    \label{fig:phase-collapse}
+\end{figure}
+
+
+In lattice and RGG, all nodes have similar degrees $k =2* L_C/N_C$ and the average link length is the size of the unit cell so $R_L = c(N_C)^{1/3} r_N$. 
+For close-packed nodes, $c \approx 3/4$. 
+Thus, when the two terms in \eqref{eq:VL} become comparable we have 
+\begin{align}
+    {3\over 4} k R_L r_L^2 & \approx {1\over 3} k^{3/2} r_L^3 \cr 
+    N^{1/3}M^{-1/3} r_N &\approx L^{1/2} M^{-1/2} r_L \cr
+    {r_L \over r_N } &\approx M^{-1/6 } L^{-1/2} N^{1/3}
+\end{align}
+which is the same condition as the $V_L \sim V_N$ condition used to derive the transition point. 
+In conclusion, for a lattice or RGG with close to optimal layout the phase transition should occcur at $r_c \sim N^{1/6} L^{1/2} $ instead of the previous estimate. 
+If the layout is far from optimal with many defects and long links, the phase transition becomes closer to the random graph's $r_c \sim N^{1/3} L^{1/2}$. 
+
+
+
+\subsubsection{Sclae-free network}
+
+
+The coefficient $c$ depends on the distribution of nodes inside the layout which are linked to the node we are considering 
+
+To get the total volume, we have to integrate this over the degree distribution $p(k) $. 
+Since the first term is linear in $k$, we simply get the total number of links $L$. 
+The second term, which is the correction due to overlapping part of the links, has the form $N \be{k^{3/2}}$. 
+Thus, the second term can be regarded as one way that heterogeneity in degrees can affect the transition.
+Nodes with higher degrees get a larger contribution from this term. 
+In a uniform network, such as the ER random graph, $k\approx 2L/N$. 
+The first term again yields the normal transition point {\color{red} calculate heterogeneous term explicitly!}
+
+In the specific case of $\gamma =2 $ scale-free network $k_{max}=N$. 
+Thus, for the central hub the volume occupied by these $N$ links is derived from their length and cross-section. 
+If the hub node is placed at the center of the layout and if the nodes are occupying a volume with total radius $R_N\sim N^{1/3} r_N$, the average link length (SI 10) will be $R_L = 3/4 R_N$. 
+% When the hub is not at the center, only the coefficient changes slightly
+The total volume of these $N$ links is, thus, \begin{align}
+    V_L %& = \pi k_{\max} r_L^2 (R_L-r_0) + {4\pi\over 3} r_0^3 \cr 
+    &= \left[{3\pi \over 4} N^{1/3} {r_N \over r_L}  +\pr{ {1\over 8}- {\pi\over 2} } N^{1/2}\right] N r_L^3  
+\end{align}
+For a star-shaped network this would be the total link volume as $L=N-1$. 
+Comparing this to the node volume $V_N = {4\pi \over 3} N r_N^3$, the first term yields a transition at
+\[ {3\pi \over 4} N^{4/3} r_N  r_L^2 \approx  {4\pi \over 3} N r_N^3 \qquad \Rightarrow \qquad {r_L\over r_N} \approx {4\over 3} N^{-1/6} \approx {4\over 3} {N^{1/3}\over L^{1/2}} \]
+compatible with our estimate. 
+In general, it is straightforward to see what the power dependence on $N$ and $L$ should be. 
+In the weak phase the volume of nodes goes with $r_N^3$, where as the volume of links goes as $R_L r_L^2$. 
+The length of the link $R_L$ must come from the exclusion of nodes in the weak phase and thus must be proportional to $r_N$. 
+The exact factor depends on the network topology. 
+In another extreme, namely the lattice and random geometric graphs, the network approximately consists of repeating unit cells, each containing a fraction $N/M$ of nodes and $L/M$ of links. 
+In this case, the expression for the transition point becomes 
+\begin{align}
+    {r_L\over r_N} \approx M^{-1/6} {N^{1/3}\over L^{1/2}}
+\end{align}
+
+
+
+
+% First, note that the estimation of the phase transition point is done up to numerical factors that will depend on the details of the network architecture.
+% As you correctly point out, heterogeneity of the network will affect it, but not the way you describe it. 
+%The underlying reason is that heterogeneous degree distribution does not guarantee that force-directed layouts (FDL) result in inhomogeneous spatial density of nodes. 
+To discuss this, we first have to establish what we mean by ``near a hub'', i.e. we need to define the size of the neighborhood.
+To capture statistical properties of the layout the size of the neighborhood needs to be at least large enough to capture all links coming out of any node. 
+In particular, the neighborhood size should be able to capture all links of a hub, as these links are interacting with each other and a neighborhood that captures only part of this interaction cannot describe a potential phase transition correctly. 
+As we explain in SI 7.A, a degree $k$ node in an unweighted network will have overlapping links up to radius $r_0\sim \sqrt{k} r_L/2 $. 
+Thus, the neighborhood size must have radius larger than $r_0$. 
+To measure heterogeneity, we must fix the neighborhood size and measure the link density in different parts of the network. 
+Therefore, we choose the neighborhood radius to be $r_0\sim \sqrt{k_{\max}} r_L  $, where $k_{\max}$ is the maximum degree in the network. 
+When $r_L/r_N$ is small, neighborhoods of size $r_0$ mostly consists of the node itself and the links connected to it. 
+Thus, for small $r_L/r_N$ density of links around hubs will be larger and there will in general be a strong correlation between degree and link density. 
+For large $r_L/r_N$, however, this heterogeneity becomes weaker. 
+
+\textbf{Figure \ref{fig:neigh}} shows the properties of the number of links in the vicinity of a node for a scale-free (Barabasi-Albert) network and a random (Erd\"os-Renyi) network, both with $N=100, L=197$. 
+We are not running the full algorithm, rather we are using the Force-directed Layouts (FDL) with straight links to measure the density of links. 
+As we see, the coefficient of variation $\sigma/\mu$ (\textbf{Figure \ref{fig:neigh}}, right) of the number of links in the neighborhood of different nodes is high below the transition point, meaning heterogeneity in density is considerable. 
+However, this heterogeneity  drops quickly after the transition.  
+The correlation between degree and number of links in the neighborhood of a node (\textbf{Figure \ref{fig:neigh}}, left) drops sharply in the scale-free  network near our predicted transition point. 
+Thus, near the transition point, a reasonably large neighborhood of nodes shows only a weak correlation between link density and node degree in a scale-free network.
+We may, therefore, ignore the heterogeneity in link density near or above the transition point. 
+The reason for this sharp drop in heterogeneity is that low degree nodes are mostly connected to hubs and so a reasonably large neighborhood of any low-degree node contains a hub and the large number of links connected to it. Thus, the density of links becomes similar among hubs and low-degree nodes at such radii.  
+
+The random network also exhibits a drop in this correlation around the transition point, but maintains a high correlation between the degree and the number of neighborhood links up to very high $r_L/r_N$. 
+Of course, since the overall variation in degree in ER is small, this correlation does not signify a large heterogeneity in the density of links around nodes, and the density of the links is fairly homogeneous over space. 
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=.45\textwidth]{fig-09-19/corr-deg-neigh.png}\includegraphics[width=.45\textwidth]{fig-09-19/coeff-var-neigh.png}
+    \caption{{\bf Spatial heterogeneity of number of links in the neighborhood of nodes: }
+    Correlation between degree and number of links in a neighborhood of radius $r_0\sim \sqrt{k_{\max}} r_L  $ of nodes in a scale-free and a random graph (Left) laid out using FDL (without links avoiding crossing) shows that the link density is correlated in with the degree. 
+    But the correlation falls sharply above the transition point (red vertical band) in the scale-free network (blue curve).
+    Thus, heterogeneity in link density becomes very weak near the phase transition and we can neglect it over a large region of the network.
+    }
+    \label{fig:neigh}
+\end{figure}
+
+Additionally, we would like to point out that Force-directed Layouts (FDL) are known to be equivalent to modularity clustering \cite{noack2009modularity}. 
+Modularity $A_{ij}- k_ik_j/\pr{2\sum_l k_l}$, like degree assortativity, is a  second-order moment of the adjacency matrix and is not related to degree distribution. 
+%It is well-known that Scale-free networks such as Barabasi-Albert have zero degree assortativity. 
+Barabasi-Albert (BA) scale-free networks have vanishingly small modularity because they are ultra-small world and their degree assortativity is also zero. 
+In particular, first order moments of the network, such as degree of nodes, does not result in the kind of heterogeneity in the density of links that would affect the transition point.
+Having two modules with vastly different average degrees (e.g. two ER networks with different average degree connected to each other via a few links), however, does result in a  heterogeneity of link density which persists all the way until the neighborhood radius $r_0$ becomes comparable to the total layout radius. This kind of heterogeneity will change the behavior of the transition point.   
+\outNim{
+Consider a ball around a degree 1 node in a scale-free network. 
+This node is most likely connected to a hub and the ball will therefore likely to contain the hub and other links connected to it.
+This means that degree alone will not result in strong heterogeneity in the density of links. 
+Also, note that, as we explain in SI 7.A, a degree $k$ node in a an unweighted network will have overlapping links up to radius $r_0\sim \sqrt{k} r_L/2 $ and to talk about the neighborhood of the node we have to talk about a region with radius larger than $r_0$.
+
+
+Using FDL, inhomogeneous spatial node density only occurs in modular networks, not in scale-free networks. 
+To see this, consider any low degree node in a scale-free network. 
+We want to know if the links around it have lower density than around a high degree node. 
+Take any link from a low-degree node.
+In a scale-free network, the link is much more likely to be connected to a high degree node than a low degree node. 
+Therefore the density of links around low degree nodes is practically the same as the density of links around high degree nodes, because neighbors of low degree nodes are mostly hubs.
+There are no low density regions in a BA scale-free graph: the whole graph is mostly low-degree nodes connected to hubs. 
+A random graph will clearly have a mostly uniform node distribution in space (except near boundaries of course), as all nodes look the same.
+A highly modular network may undergo multiple transitions (this is the topic of our followup work). 
+Of course, there can be modular graph  which are also approximately scale-free, in which case the Referee's point would be valid.
+More follows below. 
+} 
+
+Although, degree exponent alone, or being a lattice does not affect the transition, the Referee raises a very important point which needs a careful answer.
+A simple counter-example which shows Eq.(4) needs slight modification is the case of having two identical disconnected random graphs with $N$ nodes and $L$ links. 
+According to Eq.(4), for each one of these the transition occurs at $\tilde{r}_c$. 
+Obviously when the two netwrks are disconnected, the transition still occurs at $\tilde{r}_c$, but Eq.(4) predicts a different transition at $2^{-1/6}\tilde{r}_c$, which is clearly wrong. 
+The reason for this is basically due to the point the Referee is making, that the transition depends n local density. 
+Following our answer to the previous question,  the real units that should be used in Eq.4 are the smallest ``modules'' in the network, similar to unit cells of a lattice.
+In fact, Eq.(4) also fails if we consider lattices of different size.
+%For a cubic lattice the transition occurs when $r_L\sim r_N $. 
+
+{\color{red} To be continued...}
+
+%Let us work on a specific example based on the Referee's proposal.
+
+
+\outNim{
+The resolution is to use $N$ and $L$ of the 
+
+What does matter is the size of the network and Eq.(4) is inaccurate unless we clarify the following. 
+The main assumption of Eq.(4) is that the average length of links $R_L$ in any large region of the layout is the same. 
+The accurate derivation of Eq.(4) comes from equating the total node volume $V_N \sim N r_N^3$ with the total link volume $V_L \sim R_L r_L^2$. 
+Eq.(4) assumes that $R_L = c r_N $ is comparable to the layout radius. 
+{\color{red}But this clearly fails in a 3D lattice and  geometric graphs. Talk about smallest unit cell that is repeated in these networks. The unit cell is what determines $N$ and $L$ to be used in Eq.(4). This will also solve the scaling issue.  }  
+Eq.(4) predicts a transition when 
+\[ \tilde{r}_c = {r_L\over r_N} = N^{1/3}L^{-1/2}\]
+This would mean that if we double the number of nodes and links the transition would occur at $2^{-1/6} \tilde{r}_c$. 
+However, in the weak phase a perfect cubic 3D lattice has $R_L=2r_N$ everywhere, regardless of the size of the lattice.
+In a random graph, $R_L$ should grow uniformly with the layout radius, which itself grows with $N^{1/3}$ so $\tilde{r}_c$ does change. 
+
+
+For the case of a lattice, in the perfect layout (i.e. lattice with no defect) the average link length is $R_L = 2r_N$. 
+The number of links per node is $1$, so $L=N$. 
+But this time, the average volume per each node is a cube of volume $r_N^3$ and the average volume excluded by each link not a cylinder, but a cuboid of volume $R_Lr_L^2$. 
+Therefore, the link and node volumes become comparable when the thickness $r_L = r_N$ which is compatible with 
+\[{r_L\over r_N} = \]
+}
+
+
+
+%A network can be a very heterogeneous object. 
+To examine its physical properties we require a fixed scale over at which we could examine all parts of the system. 
+$r_0$ sets a minimum scale for each node and at scales smaller than $r_0$ we will not capture the full properties of the links connected to the node, rather pieces of it.
+Therefore to describe the phase properties of the network we must choose a scale larger than the largest $r_0$ such as 
+\begin{equation}
+    r_1 = 2r_0\pr{k_{\max},r_L} = \sqrt{k_{\max}} r_L 
+\end{equation}
+In the case of a power law degree distribution we have $p(k) = (\gamma-1) k^{\gamma-1}_{\min{}} k^{-\gamma}$ and $k_{\max} = N^{1/(\gamma-1)}$.
+Setting $k_{\min} = 1$, for $\gamma >2$ the total number of links can be calculated as 
+\begin{align}
+    L &= {1\over 2} \sum_{i=1}^N k_i  = {N\over 2} \int_{1 }^{k_{\max}} p(k) k dk\cr
+    &= {N(\gamma -1)\over 2 (2-\gamma )} \pr{N^{{2-\gamma\over \gamma -1}}-1} 
+\end{align}
+which for $\gamma =3 $ yields a tree with $L= N-1$. 
+$\gamma =2$ is a special case where $k_{\max} = N$ and \begin{align}
+    L = {N\over 2} \int_1^N k^{-1} dk = {N\over 2} \ln N
+\end{align}
+
+{\color{red} Even though $k_{\max}= N$, not all links come from the hub node. 
+Having $N\ln N$ links means that other nodes also have a considerable number of links. 
+In particular, one network that has this number of links wold be a hierarchical network in which a node at every level is connected to all nodes in the levels below it. 
+The number of nodes from one level to the next increases by a factor $\alpha = N^{1/l}$ where $l$ is the number of levels. 
+
+%with $\log N$ levels
+}
+%Since $k_{\max}= N$ at $\gamma=2$ we have a star-shaped network with all nodes essentially connected to a single node. 
+
+Let us examine the scale-free case with mentioned by the Referee with $\gamma=2$. 
+In this case, there exists one hub with degree $k_{\max} = N$ (other hubs exist too, but with a fraction of this degree; see SI 9). 
+
+
+{\color{red} Work out extreme cases
+\begin{enumerate}
+    \item $\gamma=2$ star-shaped
+    \item scale-free
+    \item Lattice and random geometric
+    \item discuss two loosely connected modules.
+    
+\end{enumerate}
+
+
+}
+
+% \end{document}

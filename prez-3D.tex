@@ -1,0 +1,1981 @@
+ % Copyright 2004 by Till Tantau <tantau@users.sourceforge.net>.
+%
+% In principle, this file can be redistributed and/or modified under
+% the terms of the GNU Public License, version 2.
+%
+% However, this file is supposed to be a template to be modified
+% for your own needs. For this reason, if you use this file as a
+% template and not specifically distribute it as part of a another
+% package/program, I grant the extra permission to freely copy and
+% modify this file as you see fit and even to delete this copyright
+% notice.
+
+\documentclass{beamer}%[aspectratio=169]
+\usepackage{nima,amsmath,amssymb,graphicx,color,tcolorbox}
+\usepackage{hyperref}
+\usepackage[latin9]{inputenc}
+\setcounter{secnumdepth}{3}
+\usepackage{array}
+\usepackage{mathrsfs}
+\usepackage{multirow}
+\usepackage{esint}
+\providecommand{\tabularnewline}{\\}
+\newcommand{\Ls}{\mathscr{L}}
+\newcommand{\outNim}[1]{}
+
+% There are many different themes available for Beamer. A comprehensive
+% list with examples is given here:
+% http://deic.uab.es/~iblanes/beamer_gallery/index_by_theme.html
+% You can uncomment the themes below if you would like to use a different
+% one:
+%\usetheme{AnnArbor}
+%\usetheme{Antibes}
+%\usetheme{Bergen}
+%\usetheme{Berkeley}
+%\usetheme{Berlin}
+%\usetheme{Boadilla}
+%\usetheme{boxes}
+%\usetheme{CambridgeUS}
+%\usetheme{Copenhagen}
+%\usetheme{Darmstadt}
+%\usetheme{default}
+%\usetheme{Frankfurt}
+%\usetheme{Goettingen}
+%\usetheme{Hannover}
+%\usetheme{Ilmenau}
+%\usetheme{JuanLesPins}
+\usetheme{Luebeck}
+%\usetheme{Madrid}
+%\usetheme{Malmoe}
+%\usetheme{Marburg}
+%\usetheme{Montpellier}
+%\usetheme{PaloAlto}
+%\usetheme{Pittsburgh}
+%\usetheme{Rochester}
+%\usetheme{Singapore}
+%\usetheme{Szeged}
+%\usetheme{Warsaw}
+
+%\usefonttheme[onlymath]{serif}
+\usefonttheme{serif}
+
+\addtobeamertemplate{navigation symbols}{}{%
+    \usebeamerfont{headline}%
+    \usebeamercolor[fg]{headline}%
+    \hspace{1em}%
+    \insertframenumber/\inserttotalframenumber
+}
+
+\setbeamercolor{structure}{fg=blue!70!red!80!black}
+\title{Embedding Networks in 3D}
+%{Modeling Networks Arising from Similarity Local Interactions}
+
+%{Cities as attractive potential:\\ Networks over cities from physical interactions}
+
+% A subtitle is optional and this may be deleted
+\subtitle{}%{Properties of Networks of Interacting Stochastic Agents}
+
+\author{Nima~Dehmamy\inst{1}
+ }
+% - Give the names in the same order as the appear in the paper.
+% - Use the \inst{?} command only if the authors have different
+%   affiliation.
+
+\institute[Boston University] % (optional, but mostly needed)
+{ \inst{1}{Center for Complex Networks Research, Northeastern University,
+Boston, MA 02115 }
+ }
+
+% - Use the \inst command only if there are several affiliations.
+% - Keep it simple, no one is interested in your street address.
+
+\date{\today}%{International School and Conference on Network Science, Rio de Janeiro, Brazil, January 14-16, 2015}
+% - Either use conference name or its abbreviation.
+% - Not really informative to the audience, more for people (including
+%   yourself) who are reading the slides online
+
+\subject{Networks Growth}
+% This is only inserted into the PDF information catalog. Can be left
+% out.
+
+% If you have a file called "university-logo-filename.xxx", where xxx
+% is a graphic format that can be processed by latex or pdflatex,
+% resp., then you can add a logo as follows:
+
+% \pgfdeclareimage[height=0.5cm]{university-logo}{university-logo-filename}
+% \logo{\pgfuseimage{university-logo}}
+
+% Delete this, if you do not want the table of contents to pop up at
+% the beginning of each subsection:
+
+\outNim{
+\AtBeginSubsection[]
+{
+  \begin{frame}<beamer>{Outline}
+    \tableofcontents[currentsection,currentsubsection]
+  \end{frame}
+}
+} %%%%%%%%%%%
+
+% Let's get started
+\begin{document}
+
+\begin{frame}
+  \titlepage
+%\centerline{ \small
+%{arxiv.org/pdf/1501.03543.pdf}
+%}
+\end{frame}
+
+\outNim{
+\begin{frame}{Outline}
+  \tableofcontents
+  % You might wish to add the option [pausesections]
+\end{frame}
+}
+% Section and subsections will appear in the presentation overview
+% and table of contents.
+
+\begin{frame}{Methodology}
+\begin{enumerate}
+\item Define a space
+\uncover<2->{
+\begin{enumerate}
+\item Feature selection
+\item Principal Component Analysis (PCA) 
+\item Spectral clustering methods
+\end{enumerate}
+} % unc
+\item Define distances
+\uncover<2->{
+\begin{enumerate}
+\item A physical cost function (as in Supervised Learning with Support Vector Machines (SVM))
+\item Information theoretic: Fisher Information or Kullback-Leibler (KL) divergence or of an appropriate entropy
+\end{enumerate}
+} % unc 
+\item Hierarchical optimization for efficiency
+\uncover<2->{
+\begin{enumerate}
+\item Hierarchical Clustering
+\item Coarse-graining (renormalization)
+\end{enumerate}
+} % unc 
+\end{enumerate}
+
+\end{frame}
+
+\begin{frame}{Existing Approaches}
+\href{http://somelab.net/2013/10/the-maker-way-using-r-to-reify-social-media-data-via-3d-printing/}{Jeff Hemsley, Social Media Lab @ U of Washington}
+\centerline{\includegraphics[height=.8\textheight]{3dprint.png}
+}
+\end{frame}
+
+\begin{frame}{Space}
+\begin{itemize}
+\item \href{http://www.barabasilab.com/pubs/CCNR-ALB_Publications/201509-08_SciReports-UnifiedData/201509-08_SciReports-UnifiedData.pdf}{A unifed data representation
+theory for network visualization,
+ordering and coarse-graining'', Kov\'acs et al.}
+
+\item \href{}{``Spectral redemption in clustering sparse networks'' Krzakala et al.}
+\centerline{\includegraphics[width=.7\textwidth]{non-back-pca.png}}
+
+\item We may also define appropriate energy function for  embedding
+
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Metric}
+\begin{itemize}
+\item 
+A Hamiltonian or a ``Cost Function'' from physical constraints on the embedding. 
+\item 
+Fisher Information
+\centerline{\includegraphics[width=.7\textwidth]{fisher.png}}
+
+\item KL divergence based on probability distributions defined for nodes or edges. 
+\item 
+Support Vector Machine and other machine learning algorithms use a variety of metrics including Euclidean and Gaussian Kernels. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Hierarchy}
+\href{http://www.nature.com/nphys/journal/v8/n1/pdf/nphys2162.pdf}{``Communities, modules and large-scale structure
+in networks'', Newman MEJ}
+\href{http://www.nature.com/nature/journal/v466/n7307/pdf/nature09182.pdf}{``Link communities reveal multiscale complexity in
+networks'' Ahn et al.}
+
+
+\centerline{\includegraphics[height=.65\textheight]{dendrogram.png}}
+
+\end{frame}
+
+\begin{frame}{Hierarchy}
+\href{http://arxiv.org/pdf/0706.0812v1.pdf}{``Spectral coarse-graining of complex networks'' Gfeller and Rios}
+\centerline{\includegraphics[height=.8\textheight]{coarse.png}}
+\end{frame}
+
+\begin{frame}{Comment on the brain}
+Neurons don't feel the gravity much;
+Glial cells provide spatial support. 
+
+\centerline{\includegraphics[width=.8\textwidth]{brain_2.jpg}}
+{\small \href{http://www.andyross.net/images/brain_2.jpg}{http://www.andyross.net/images/brain\_2.jpg}
+}
+\end{frame}
+
+\begin{frame}{My Plan}
+\begin{itemize}
+\item Start from a physical ``cost function'', i.e. Hamiltonian, which assigns an energy to the length of links and relative  position of nodes. 
+\item Use coarse-graining to build a hierarchy in the network based on the Hamiltonian and, similar to Istvan, do the hierarchical clustering by minimizing the information theoretic distance of the coarse-grained networks at each step. 
+
+\item Systematically approximate the ground state at each level of hierarchy and gradually fine-grain the system. 
+
+(Note: There are known connections Machine learning data classifications and coarse-graining, e.g. \href{http://arxiv.org/pdf/1410.3831v1.pdf}{``An exact mapping between the Variational Renormalization Group and Deep Learning'' Mehta and Schwab}
+\end{itemize}
+
+
+\end{frame}
+
+
+\end{document}
+
+
+
+
+\outNim{
+
+\begin{frame}{Motivation}
+    %{\Large \justify
+
+%Additionally, in contrast with common network models, social and biological networks exhibit a high degree of clustering. Here we construct a class of network growth models based on local interactions on a metric space, capable
+% of producing arbitrary degree distributions as well as a naturally
+% high degree of clustering akin to biological networks.  As a specific
+% example, we study the case of random-walking agents, though most results
+% hold for any linear stochastic dynamics.  Agents form bonds when they
+% meet at designated locations we refer to as ``rendezvous points.''
+% The spatial distribution of the rendezvous points determines key characteristics
+% of the network such as the degree distribution. For any arbitrary
+% (monotonic) degree distribution, we are able to analytically solve
+% for the required rendezvous point distribution.
+
+
+{\Large Locality}
+    \begin{itemize}
+    \item Many real world networks are primarily formed
+through \alert{local interactions} between agents (e.g.
+%\begin{enumerate}
+%\item
+many social and friendship networks form from meeting in person)
+%\item Biological evolution at level of genes happens from incremental mutations
+%\end{enumerate}
+    \item Most popular network growth models (e.g. Erd\"os-Renyi, Watts-Strogatz, Barabasi-Albert, and their variations.)  \alert{ignore locality}
+    \item In physics point-like, local interactions are easy to implement, best described in the language of ``field theory'' (classical, statistical, quantum, etc.)
+    
+    \end{itemize}
+    %\medskip
+    
+    
+      %We will examine the properties of the Landau-Ginzburg type Lagrangians for describing response dynamics of networks. We will assume that our network is dynamic. Both the links and the attributes we assign to nodes will change over time.
+      
+     % }%large
+    \end{frame}
+}%% outnim
+
+
+
+\outNim{
+
+\begin{frame}{Location Location Location}%{You rarely befriend a passer-by on the street}
+
+\centerline{\includegraphics[width=.35\columnwidth, trim= 0cm 0 0cm 0, clip]{plots/street.jpg}}
+\uncover<2->{
+\centerline{
+\begin{tabular}{ccc}
+ \includegraphics[width=.30\columnwidth, trim= 0cm 0 0cm 0, clip]{plots/class.jpg} &\includegraphics[width=.35\columnwidth]{plots/cafe.jpg} &\includegraphics[width=.30\columnwidth]{plots/college.jpg}
+\end{tabular}
+}
+}
+\end{frame}
+
+} %% outnim
+
+\begin{frame}{Friendship through Face-to-Face Interaction}
+%{Cities as collections of ``Rendezvous Points''}{You rarely befriend a passer-by on the street}
+
+{\Large Co-location increases chance of friendship}$^*$
+ %``close to 70\% of users who call each other frequently (at least once per month on average) have shared the same space at the same time (``co-location'').''
+
+\centerline{
+\begin{tabular}{ccc}
+ \includegraphics[width=.30\columnwidth, trim= 0cm 0 0cm 0, clip]{plots/class.jpg} &\includegraphics[width=.35\columnwidth]{plots/cafe.jpg} &\includegraphics[width=.30\columnwidth]{plots/college.jpg}
+\end{tabular}
+}
+{\tiny * Interplay between Telecommunications and Face-toFace
+Interactions: A Study Using Mobile Phone Data, {\em Calabrese et al.}}
+
+%\uncover<2->{
+%\centerline{\includegraphics[width=.35\columnwidth, trim= 0cm 0 0cm 0, clip]{plots/street.jpg}}
+%}
+\end{frame}
+
+
+\outNim{
+
+
+\begin{frame}{ Interactions in Abstract Parameter Space}
+%{Cities as collections of ``Rendezvous Points''}{You rarely befriend a passer-by on the street}
+
+{\color{red!50!black} \Large Co-authorship Based on Research Interest Overlap}
+
+If we, by some means, quantify \alert{research interests} % (e.g. number of times the word ``networks'', or ``spin'' appear in one's papers)
+\begin{columns}
+\begin{column}{.5\columnwidth}
+\includegraphics[width=1\columnwidth,]{plots/{phys-topics}.png}
+\end{column}
+\begin{column}{.5\columnwidth}
+\includegraphics[width=1\columnwidth]{plots/simi1.pdf}
+\end{column}
+\end{columns}
+%\centerline{
+ %\includegraphics[width=.5\columnwidth,]{plots/{phys-topics}.png}\begin{tabular}{c}
+%\includegraphics[width=.35\columnwidth]{plots/simi1.pdf}\\
+%hi
+%&\includegraphics[width=.30\columnwidth]{plots/college.jpg}
+%\end{tabular}
+%}
+{\tiny * Knowledge sharing example cases from Germany {\em https://sisobproject.wordpress.com/2013/10/28/knowledge-sharing-example-cases-from-germany/}}
+
+%\uncover<2->{
+%\centerline{\includegraphics[width=.35\columnwidth, trim= 0cm 0 0cm 0, clip]{plots/street.jpg}}
+%}
+\end{frame}
+} % outnim
+
+\begin{frame}{Proximity in abstract spaces}
+
+{\color{red!50!black} \Large Co-authorship Based on Research Interest Overlap}
+
+If we, by some means, quantify \alert{research interests}
+
+%{\Large Similarity in a Parameter Space}
+\centerline{\includegraphics[width=.7\columnwidth]{plots/simi1.pdf}%\includegraphics[width=.5\columnwidth]{plots/simix2.pdf}
+}
+    \begin{itemize}
+    \item Many networks are primarily formed from overlap or similarity in interests, location, ...
+    %\alert{local interactions}  (e.g. many social and friendship networks form from meeting in person)
+    %\item Most popular network growth models (e.g. Erd\"os-Renyi, Watts-Strogatz, Barabasi-Albert, and their variations.)  \alert{ignore locality}
+    %\item In physics point-like, local interactions are easy to implement, best described in the language of ``field theory'' (classical, statistical, quantum, etc.)
+    
+    \end{itemize}
+
+\end{frame}
+
+
+
+\begin{frame}{Example: Co-authorship Network}
+%\begin{itemize}
+\alert{Nodes}: Scientists, \alert{Links}: Wrote paper together
+%\end{itemize}
+\centerline{\includegraphics[width=1\columnwidth,trim=0 1.5in 0 1in, clip]{plots/{coauthorship-bv.jpg}}}
+
+{\tiny http://wiki.cns.iu.edu/display/SCI2TUTORIAL/5.1+Individual+Level+Studies+-+Micro}
+\end{frame}
+
+    
+\outNim{
+
+\begin{frame}{Central Questions}
+    %{\Large \justify
+    
+    \begin{enumerate}
+    \item Can a network growth model based on \alert{locally interacting agents} give rise to networks resembling real-world networks (say, have similar degree distribution, clustering, and degree-degree correlation as real-world networks.)
+    
+    \item What role does \alert{Geography and location} play in friendship networks?
+    
+\item \alert{NOTE:} The space can be an \alert{abstract parameter space} endowed with a metric, not necessarily actual locations in space.
+    \end{enumerate}
+    
+    %}%large
+    \end{frame}
+    
+
+%} % outnim
+
+
+\begin{frame}[b]{An Example: High Energy Phenomenology}{\large ``Preferential Attachment'' explains high degrees
+}
+
+{\large
+\only<1>{ 1st Moment: $P(k)$}
+\only<2>{$$\mbox{2nd Moment: }\quad k^{(1)}_i= {1\over k_i} \sum_j [A^2]_{ij} $$}
+\only<3>{$$\mbox{3rd Moment: }\quad c_{i}\equiv\frac{2\times \mbox{\# of triangles involving\ }i}{k_{i}(k_{i}-1)}= \frac{[A^3]_{ii}}{k_{i}(k_{i}-1)}$$}
+}
+%The Barabasi-Albert Model: ``Preferential attachment'' Comparison to a real network:
+
+\only<1>{\centerline{\includegraphics[width=.9\columnwidth]{plots/{pk-het-ba1.pdf}}}
+}
+\only<2>{
+\centerline{\includegraphics[width=.9\columnwidth]{plots/{dk-het-ba1.pdf}}}
+}
+\only<3>
+{
+\centerline{\includegraphics[width=.9\columnwidth]{plots/{ck-het-ba1.pdf}}}
+}
+\end{frame}
+\begin{frame}{}
+
+\centerline{\color{red!50!black} \Huge But ...}
+
+\end{frame}
+
+\begin{frame}{Except: Success of Preferential Attachment}
+The Barabasi-Albert Model: ``rich gets richer''
+Comparison to a real network:
+
+\only<1>{\centerline{\includegraphics[width=.9\columnwidth]{plots/{pk-het-ba-full1.pdf}}}
+}
+\only<2>{
+\centerline{\includegraphics[width=.9\columnwidth]{plots/{dk-het-ba-full1.pdf}}}
+}
+\only<3>
+{
+\centerline{\includegraphics[width=.9\columnwidth]{plots/{ck-het-ba-full1.pdf}}}
+}
+\end{frame}
+
+} % outnim
+
+
+\begin{frame}[b]{An Example: High Energy Phenomenology}{\large ``Preferential Attachment'' explains high degrees
+}
+
+{\large
+\only<1>{ 1st Moment: $P(k)$}
+\only<2>{$\mbox{2nd Moment: }\quad k^{(1)}_i= {1\over k_i} \sum_j [A^2]_{ij} $}
+\only<3>{$\mbox{3rd Moment: }\quad c_{i}\equiv\frac{2\times \mbox{\# of triangles involving\ }i}{k_{i}(k_{i}-1)}= \frac{[A^3]_{ii}}{k_{i}(k_{i}-1)}$}
+}
+%The Barabasi-Albert Model: ``Preferential attachment'' Comparison to a real network:
+
+\only<1>{\centerline{\includegraphics[width=.9\columnwidth]{plots/{pk-het-ba-full2.pdf}}}
+}
+\only<2>{
+\centerline{\includegraphics[width=.9\columnwidth]{plots/{dk-het-ba-full2.pdf}}}
+}
+\only<3>
+{
+\centerline{\includegraphics[width=.9\columnwidth]{plots/{ck-het-ba-full2.pdf}}}
+}
+\end{frame}
+
+
+\outNim{
+
+
+    \begin{frame}{Central Question}
+    %{\Large \justify
+    {\Huge Does locality impose anything on the network structure? }
+{\color{red!50!black} \Large
+Can  a microscopic interaction model explain features of \alert{similarity-based} networks with \alert{local interactions} in a parameter space?}
+%Can a network model based on \alert{similarity} and \alert{local interactions} in a parameter space explain real-world networks (e.g. have similar degree distribution, clustering, and degree-degree correlation as real-world networks.)
+\outNim{
+  
+    \begin{enumerate}
+    \item Can a network model based on \alert{local interactions} explain real-world networks (e.g. have similar degree distribution, clustering, and degree-degree correlation as real-world networks.)
+    
+    \item What role does \alert{Geography and location} play in friendship networks?
+    \end{enumerate}
+}%out
+    %}%large
+    \end{frame}
+
+} % out
+
+
+\begin{frame}{Central Question}
+    %{\Large \justify
+    {\Huge Does locality impose anything on the network structure? }
+{\color{red!50!black}
+\centering \Large Could the behavior at small degree be explained by \\
+\centerline{ local, similarity-based interactions?}
+}
+
+\end{frame}
+
+\outNim{
+
+
+\begin{frame}{Motivation}
+    %{\Large \justify
+
+%Additionally, in contrast with common network models, social and biological networks exhibit a high degree of clustering. Here we construct a class of network growth models based on local interactions on a metric space, capable
+% of producing arbitrary degree distributions as well as a naturally
+% high degree of clustering akin to biological networks.  As a specific
+% example, we study the case of random-walking agents, though most results
+% hold for any linear stochastic dynamics.  Agents form bonds when they
+% meet at designated locations we refer to as ``rendezvous points.''
+% The spatial distribution of the rendezvous points determines key characteristics
+% of the network such as the degree distribution. For any arbitrary
+% (monotonic) degree distribution, we are able to analytically solve
+% for the required rendezvous point distribution.
+{\Large Locality}
+    \begin{itemize}
+    \item Many real world networks are primarily formed
+through \alert{local interactions} between agents (e.g.
+%\begin{enumerate}
+%\item
+many social and friendship networks form from meeting in person)
+%\item Biological evolution at level of genes happens from incremental mutations
+%\end{enumerate}
+    \item Most popular network growth models (e.g. Erd\"os-Renyi, Watts-Strogatz, Barabasi-Albert, and their variations.)  \alert{ignore locality}
+    \item In physics point-like, local interactions are easy to implement, best described in the language of ``field theory'' (classical, statistical, quantum, etc.)
+    
+    \end{itemize}
+    %\medskip
+    
+    
+      %We will examine the properties of the Landau-Ginzburg type Lagrangians for describing response dynamics of networks. We will assume that our network is dynamic. Both the links and the attributes we assign to nodes will change over time.
+      
+     % }%large
+    \end{frame}
+    
+    
+}%% out
+
+
+
+\outNim{
+
+\begin{frame}{The Model}{\Large Stochastic Agents Interacting in a Parameter Space }
+\centerline{
+\begin{tabular}{cc}
+\includegraphics[width=.5\linewidth, trim= 3cm 1cm 3cm 0 ,clip]{plots/rands.pdf}
+&
+\uncover<2->{
+ \includegraphics[width=.5\linewidth,trim= 1cm 2cm 3cm 1cm ,clip ]{plots/harmonic-city.pdf} }
+  \\
+Random Walkers
+& \uncover<2->{Inside an Attractive Potential}
+\end{tabular}
+ } % centerline
+ 
+\end{frame}
+
+%} % outnim
+
+
+
+\begin{frame}{The Model}{\Large Stochastic Agents Interacting in a Parameter Space }
+\centerline{
+\begin{tabular}{cc}
+\includegraphics[width=.3\linewidth, trim= 3cm 0 3cm 0 ,clip]{plots/rands.pdf}
+&
+\uncover<1->{
+ \includegraphics[width=.4\linewidth, ]{plots/harmonic-city.pdf} }
+  \\
+Random Walkers
+& \uncover<1->{Inside an Attractive Potential}
+\end{tabular}
+ } % centerline
+ \uncover<1->{Probability densities obey a nonlinear Fokker-Planck equation
+ \begin{equation}
+\Ls_{x,t} \phi_i (x,t)= J_i(x,t) - {\delta \mathcal{V}\over \delta \phi_i}
+\end{equation}
+where $\mathcal{V}[\phi]$ denotes interaction
+ }
+\end{frame}
+
+} % outnim
+
+%\outNim{
+
+\begin{frame}{The Model}{\Large Stochastic Agents Interacting in a Parameter Space }
+
+\Large
+\begin{columns}
+  \begin{column}{.6\textwidth}
+  
+\begin{itemize}
+%\item Think of each node as a physical entity that has some dynamics.
+
+\item %Each node $i$ follows a stochastic process.
+The probability density of finding agent $i$ is denoted by $\phi_i(x,t)$.
+\uncover<2->{
+\item %If at $t=t_0$ agent $i$ was at $x_i$,
+$\phi_i(x,t)$ satisfies a general Fokker-Planck equation
+\begin{equation*}
+\Ls_{x,t} \phi_i (x,t)= J_i(x,t) - {\delta \mathcal{V}\over \delta \phi_i} \label{eq:fp1}
+\end{equation*}
+} %unc
+\uncover<3->{
+\item $\Ls_{x,t}$ is a linear operator \item $\mathcal{V}[\phi]$ is interaction
+} %unc
+%\begin{align}
+%1
+%\mathcal{V}&= {f^{(2)}_{ij}\over N}  \phi_i\phi_j + {f^{(3)}_{ijk}\over N^2} \phi_i\phi_j \phi_k +...
+%\cr
+%\Gamma(x,t)&\equiv {f_{ij} \over N}  , \quad \mbox{for all\ }i,j
+%\end{align}
+\end{itemize}
+
+ \end{column}
+  \begin{column}{.4\textwidth}
+  \centering
+  %\includegraphics[width=.9\linewidth, trim= 3cm 0 3cm 0 ,clip]{plots/rands.pdf}\\
+ % \includegraphics[width=.9\linewidth, ]{plots/harmonic-city.pdf}
+  \Large
+\begin{tabular}{c}
+\uncover<3->{
+$\mathcal{V}\sim \Gamma (x) \phi_i \phi_j $
+} %unc
+\\
+ \includegraphics[width=.9\columnwidth,trim= 3.8cm 1.5cm 4.5cm 1.3cm, clip]{plots/rand-circ.pdf}%]{plots/rand-sketch1.pdf}
+\end{tabular}
+  \end{column}
+  \end{columns}
+\end{frame}
+%}% outnim
+
+\begin{frame}{Network of Correlations}
+
+
+{\Large Correlations are a natural candidate for {\color{blue} ensemble average of  adjacency matrix}:
+\begin{align*}
+&\bk{ A_{ij}} \equiv\bk{\phi_i\phi_j}-\bk{\phi_i}\bk{\phi_j} \cr
+%\end{align*}
+\uncover<2->{%\begin{align*}
+&\mbox{related to } {\color{red} \Gamma}\equiv {\delta ^2\mathcal{V} \over \delta \phi_i\delta \phi_j}
+}
+\end{align*}
+\uncover<2->{\centerline{\large \alert{$\Gamma $ = `` Rendezvous Point Density''}}
+\centerline{($\phi_i(x,t)$ is probability density of agent $i$  )}
+} % uncover
+}
+\end{frame}
+
+
+\begin{frame}{Interactions and ``Rendezvous Point density'' $\Gamma(x)$}
+
+\Large
+\begin{tabular}{c}
+$\mathcal{V}\sim \Gamma (x) \phi_i \phi_j $\\
+ \includegraphics[width=.5\columnwidth,trim= 3.8cm 1.5cm 4.5cm 1.3cm, clip]{plots/rand-circ.pdf}%]{plots/rand-sketch1.pdf}
+\end{tabular}\uncover<2->{\begin{tabular}{cc} %\only<2>{Ex: $\Gamma $ for Power Laws   }\\
+%\only<2>
+{  $P(k)\sim k^{-\gamma}$
+%for $\gamma=1,2,3$
+}\\
+%\only<2>
+{
+\includegraphics[width=.45\columnwidth, trim= 0 .7cm 0 0, clip ]{plots/gamma123.pdf}
+%\includegraphics[width=.5\columnwidth]{plots/rand-sketch3.pdf}
+}
+%3rd-person facilitated
+\end{tabular}
+}
+\end{frame}
+
+
+\begin{frame}
+
+\centerline{\Huge Simulation Results}
+
+\end{frame}
+    
+\begin{frame}{Our Results: Co-authorship}
+Assuming Interactions through ``existing literature'' $\Gamma\sim \bk{\phi_k}$
+ 
+\only<1>{\centerline{\includegraphics[width=.9\columnwidth]{plots/{pk-het-all2.pdf}}}
+}
+\only<2>{
+\centerline{\includegraphics[width=.9\columnwidth]{plots/{dk-het-all2.pdf}}}
+}
+\only<3>
+{
+\centerline{\includegraphics[width=.9\columnwidth]{plots/{ck-het-all2.pdf}}}
+}
+\end{frame}
+
+
+{
+\setbeamercolor{background canvas}{bg=black}
+\begin{frame}{Night Lights}
+
+\centerline{
+\begin{tabular}{cc}
+ \includegraphics[height=.50\columnwidth, angle=90, trim= 4cm 2cm 6cm 0cm, clip]{plots/city-Brussels.jpg} &\includegraphics[width=.50\columnwidth, trim= 6cm 4cm 6cm 4cm, clip]{plots/city-Boston.jpg} \\
+ \includegraphics[width=.50\columnwidth, trim= 1cm 1cm 1cm 1cm, clip]{plots/city-Paris.jpg}
+&\includegraphics[height=.50\columnwidth, trim= 4cm 0cm 0cm 0cm, clip, angle= 90]{plots/city-Berlin.jpg}
+\end{tabular}
+}
+\end{frame}
+}%%%
+
+
+\outNim{
+
+\begin{frame}{}
+\centerline{{\color{blue!50!black} \Huge How do we model this? }}
+\end{frame}
+
+
+\begin{frame}{The Model}{\Large Interacting Random Walkers and Attractive City }
+\centerline{
+\begin{tabular}{cc}
+\includegraphics[width=.3\linewidth, trim= 3cm 0 3cm 0 ,clip]{plots/rands.pdf}
+&
+\uncover<2->{
+ \includegraphics[width=.4\linewidth, ]{plots/harmonic-city.pdf} }
+  \\
+Random Walkers
+& \uncover<2->{Inside an Attractive Potential}
+\end{tabular}
+ } % centerline
+ \uncover<2->{%Probability densities obey a nonlinear Fokker-Planck equation
+ 
+ \centerline{\bf Dynamics of agent $i$ = Home of $i$ + Interactions
+ }
+ }
+  \uncover<2->{
+ \begin{equation}
+\Ls_{x,t} \phi_i (x,t)= J_i(x,t) - {\delta \mathcal{V}\over \delta \phi_i}
+\end{equation}
+%where $\mathcal{V}[\phi]$ denotes interaction
+ }
+\end{frame}
+
+\outNim{
+\begin{frame}{The Model}{\Large Stochastic Agents Interacting in a Parameter Space }
+
+\begin{columns}
+  \begin{column}{.6\textwidth}
+  
+\begin{itemize}
+%\item Think of each node as a physical entity that has some dynamics.
+
+\item Each node $i$ follows a stochastic process. The probability density of finding agent $i$ is denoted by $\phi_i(x,t)$.
+
+\item If at $t=t_0$ agent $i$ was at $x_i$, $\phi_i(x,t)$ satisfies a general Fokker-Planck equation
+\begin{equation}
+\Ls_{x,t} \phi_i (x,t)= J_i(x,t) - {\delta \mathcal{V}\over \delta \phi_i} \label{eq:fp1}
+\end{equation}
+where $\mathcal{V}[\phi]$ is interaction
+\begin{align}
+\mathcal{V}&= {f^{(2)}_{ij}\over N}  \phi_i\phi_j + {f^{(3)}_{ijk}\over N^2} \phi_i\phi_j \phi_k +...
+%\cr
+%\Gamma(x,t)&\equiv {f_{ij} \over N}  , \quad \mbox{for all\ }i,j
+\end{align}
+\end{itemize}
+
+ \end{column}
+  \begin{column}{.4\textwidth}
+  \centering
+  \includegraphics[width=.9\linewidth, trim= 3cm 0 3cm 0 ,clip]{plots/rands.pdf}\\
+  \includegraphics[width=.9\linewidth, ]{plots/harmonic-city.pdf}
+  
+  \end{column}
+  \end{columns}
+\end{frame}
+}% outnim
+
+\begin{frame}{Network of Correlations}
+
+
+{%\Large Correlations are a natural candidate for adjacency:
+\LARGE
+\centerline{ Correlation of probability densities. $\phi_i$ }
+$$ \bk{A_{ij}} \equiv\bk{\phi_i\phi_j}-\bk{\phi_i}\bk{\phi_j}$$
+}
+Ensemble average of Adjacency matrix entries $A_{ij}$
+\end{frame}
+
+
+} % outnim
+
+\begin{frame}{}
+\centering{{\color{red!50!black} \Huge What does the ``Rendezvous point distribution'', $\Gamma(r)$, \\ look like for real cities? }}
+\end{frame}
+
+
+\outNim{ %%%%
+
+
+
+
+\begin{frame}{Analytical Results}
+Defining the Green's function $G_{xy}\equiv G(x,t_x;y,t_y)$ and a new operator $\ba{\Ls}_x$ through
+\[\Ls_y G_{xy}=\ba{\Ls}_x G_{xy}= \delta^n (x-y) \]
+\uncover<2->{We have
+\[A_{ij} = G_{ix}\Gamma_{ij}(x,t_x) G_{xj} + O\pr{{1\over N}} \]
+\[\Gamma_{ij} = \bk{{\delta^2 \mathcal{V} \over \delta \phi_i \delta \phi_j }}\]
+}
+\end{frame}
+
+
+\begin{frame}{Analytical Results}{ Recursive relation for $m$th neighbor degree }
+
+$J=$ initial node distribution
+{\Large
+\[\ba{\Ls}_{ii}(x_i)\pr{k_i^{(m)}k_i^{(m-1)}}= \Gamma_{ii} J(x_{i}) k^{(m-1)}_i\]
+}
+
+
+\end{frame}
+
+} %
+
+
+
+\begin{frame}{First convert to polar coordinates}
+\centerline{
+\includegraphics[width=.7\columnwidth]{plots/polar.png}
+}
+\end{frame}
+
+
+
+
+\outNim{ %%%%%%%%%%%%%%%%
+
+\begin{frame}{\only<1>{{\Huge Paris!}} Density of ``Rendezvous Points''}{}
+
+
+\only<1>{
+\centerline{
+\begin{tabular}{cc}
+\includegraphics[height=.30\columnwidth, angle=90]{plots/city2.jpg}&
+ \includegraphics[width=.7\columnwidth, angle=0, trim=0 1.8cm 0 0, clip]{plots/city2-1-fit1.pdf}
+ \\ & Radial direction
+\end{tabular}
+}
+}
+
+\outNim{
+\only<1>{
+\centerline{\begin{tabular}{cc}
+\includegraphics[height=.30\columnwidth, angle=90]{plots/city3.jpg} &\includegraphics[width=.7\columnwidth, trim=0 1.8cm 0 0, clip]{plots/city3-1-fit1.pdf}
+\\ (NASA)
+ %\includegraphics[width=.30\columnwidth]{plots/city1-fit}
+%\includegraphics[width=.50\columnwidth]{plots/city4.jpg}
+\end{tabular}
+}
+}
+
+
+\only<3>{\centerline{
+\begin{tabular}{cc}
+\includegraphics[height=.30\columnwidth, angle=90]{plots/city-Shanghai.jpg}&
+ \includegraphics[width=.7\columnwidth, angle=0, trim=0 2.2cm 0 0, clip]{plots/city-Shanghai1-fit.pdf}
+ \\ hi
+\end{tabular}
+}
+}
+
+}
+\end{frame}
+
+} %outNim
+
+\begin{frame}
+{\only<1>{{\Huge Paris!}}\only<2>{{\Huge Shanghai}} Density of ``Rendezvous Points''}{}
+\only<1>{
+\begin{tabular}{cc}
+\includegraphics[height=.30\columnwidth, angle=90]{plots/city-paris.jpg}&
+ \includegraphics[width=.7\columnwidth, angle=0, trim=0 2.4cm 0 0, clip]{plots/city-Paris1-fit.pdf}
+ \end{tabular}
+}
+\only<2>{
+\begin{tabular}{cc}
+\includegraphics[height=.30\columnwidth, angle=90]{plots/city-Shanghai.jpg}&
+ \includegraphics[width=.7\columnwidth, angle=0, trim=0 2.2cm 0 0, clip]{plots/city-Shanghai1-fit.pdf}
+\end{tabular}
+}
+
+\end{frame}
+
+
+\begin{frame}
+
+\centerline{\Huge Shanghai and Simulation Results}
+
+\end{frame}
+
+    
+\begin{frame}{Shanghai Phone Call Data }
+
+\only<1>{\centerline{\large 1st Network Moment from $A_{ij}$}
+\centerline{\includegraphics[width=.9\columnwidth]{plots/{pk-cell-ba-full1.pdf}}}
+}
+\only<2>{\centerline{\large 2nd Network Moment from $\left[A_{ij}\right]^2$}
+\centerline{\includegraphics[width=.9\columnwidth]{plots/{dk-cell-ba-full2.pdf}}}
+}
+\only<3>
+{
+\centerline{\large 3rd Network Moment from $\left[A_{ij}\right]^3$}
+\centerline{\includegraphics[width=.9\columnwidth]{plots/{ck-cell-ba-full2.pdf}}}
+}
+\end{frame}
+
+
+
+\begin{frame}{Conclusion}
+
+
+{\color{red!50!black} \Large
+Can  a microscopic interaction model explain features of \alert{similarity-based} networks with \alert{local interactions} in a parameter space?}
+\begin{itemize}
+\item
+Yes, Local Interactions in space have important consequences for the network structure
+\item Changing concentration of resources (``rendezvous points'' $\Gamma$) may alter the networks.
+\item This framework can be used with arbitrary dynamical processes, background potentials, and in any number of dimensions.
+%\item Many results can be derived analytically for arbitrary number of dimensions and background potential.
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{Collaborators}
+\centerline{{\color{red!50!black} \Huge Thank You!}}
+
+\centerline{
+\begin{tabular}{c}
+ \includegraphics[width=.15\columnwidth]{plots/navid.jpg} \\
+ Navid Dianati
+\end{tabular}
+}
+\centerline{
+\begin{tabular}{cccc}
+ \includegraphics[width=.16\columnwidth, trim= 1.5cm 0 2cm 0, clip]{plots/Asher.jpg} &\includegraphics[width=.17\columnwidth, trim= 3cm 3cm 3cm 1cm, clip]{plots/ZQJ.jpg} &\includegraphics[width=.17\columnwidth, trim= 2.5cm 3.5cm 0.5cm 0.cm, clip]{plots/Shlomo.jpg} &\includegraphics[width=.13\columnwidth]{plots/Gene.jpg} \\
+  Asher Mullakandov & Zhi-Qiang Jiang  &Shlomo Havlin & Eugene Stanley
+\end{tabular}
+}
+\end{frame}
+
+
+\begin{frame}{Night Lights vs Population Density}
+\includegraphics[width=.8\textwidth,trim=40pt 30pt 30pt 10pt, clip]{plots/Erika-snap.png}\includegraphics[width=.15\textwidth]{plots/Erika.jpg}
+\end{frame}
+
+{
+\setbeamercolor{background canvas}{bg=black}
+
+\begin{frame}{Future Work: Brain vs City}
+\begin{tabular}{cc}
+ \includegraphics[width=.4\columnwidth, trim = 0 3in 0 0, clip]{plots/DTI-sagittal-fibers.jpg}&
+%\includegraphics[width=.5\columnwidth]{plots/map.jpg}
+\includegraphics[width=.50\columnwidth]{plots/city4.jpg} \\
+ \includegraphics[width=.4\columnwidth]{plots/axon.jpg}& \includegraphics[width=.40\columnwidth, trim= 0cm 0 0cm 0, clip]{plots/class.jpg} \\
+ {\tiny \color{white}(top: Thomas Schultz, BioTensor}
+ & {\tiny  \color{white}(top: ISS, Berlin at night)}\\
+  {\tiny \color{white} U of Utah, bottom: MBI)}
+\end{tabular}
+
+
+\end{frame}
+
+} % black
+
+\begin{frame}{Preliminary: Brain and Degree-Degree Correlation}
+``Scale-free brain functional networks'' Victor M. Egu\'iluz et al. (2003) fMRI of brain  Correlations in firing of neurons as a network.\\
+{\tiny (left plot from paper arxiv.org/abs/cond-mat/0309092v3 , right: our model)}
+\centerline{
+\includegraphics[width=.3\columnwidth]{plots/brain1.pdf}\includegraphics[width=.28\columnwidth, trim= 0 0 5.7in 0,clip]{plots/{CE-compare-clust-k1}.png}\includegraphics[width=.3\columnwidth]{plots/g2-clust-k1.png}
+}
+\end{frame}
+
+\begin{frame}{Bonus: Interactions}
+\begin{tabular}{cc}
+$\mathcal{V}\sim \phi_i \phi_j $ & \only<2>{$\mathcal{V}\sim \phi_i\phi_j\phi_k $ }\\
+ \includegraphics[width=.5\columnwidth]{plots/rand-sketch1.pdf}&
+\only<2>{ \includegraphics[width=.5\columnwidth]{plots/rand-sketch3.pdf} }\\
+(May be location-dependent) & \only<2>{3rd-person facilitated}
+\end{tabular}
+
+\end{frame}
+
+
+\begin{frame}{Bonus: C. Elegans Protein-Protein Interaction}{Data from HMS/Dana Farber {interactome.dfci.harvard.edu/C\_elegans/}}
+
+C. Elegans PPI $C=0.47$, our $\gamma=1$ has $C=0.20$, comparable BA has $C=0.004$, random network has $C=1.5\times 10^{-3}$.
+\begin{figure}[t]
+\begin{centering}
+\includegraphics[width=1\columnwidth]{plots/{CE_clust_Pk}.pdf}
+\caption{\small Left: The degree distribution and clustering of C. Elegans PPI.}
+\par\end{centering}
+
+\end{figure}
+
+\end{frame}
+
+
+
+
+
+\begin{frame}{}
+
+{ \color{red!50!black} \LARGE Example: Brabasi-Albert: ``rich gets richer'' or ``Preferential Attachment''
+}
+
+{\Large Yields a ``scale-free'' network $$P(k)\sim k^{-3}$$
+}
+
+
+\end{frame}
+
+
+\begin{frame}{Analytical Results}
+Defining the Green's function $G_{xy}\equiv G(x,t_x;y,t_y)$ and a new operator $\ba{\Ls}_x$ through
+\[\Ls_y G_{xy}=\ba{\Ls}_x G_{xy}= \delta^n (x-y) \]
+\uncover<2->{We have
+\[A_{ij} = G_{ix}\Gamma_{ij}(x,t_x) G_{xj} + O\pr{{1\over N}} \]
+\[\Gamma_{ij} = \bk{{\delta^2 \mathcal{V} \over \delta \phi_i \delta \phi_j }}\]
+}
+\end{frame}
+\begin{frame}{Analytical Results}{ Recursive relation for $m$th neighbor degree }
+
+$J=$ initial node distribution
+{\Large
+\[\ba{\Ls}_{ii}(x_i)\pr{k_i^{(m)}k_i^{(m-1)}}= \Gamma_{ii} J(x_{i}) k^{(m-1)}_i\]
+}
+
+
+\end{frame}
+    
+\begin{frame}{Mobility Patterns in Shanghai from cellphones}
+
+%{\Large \centerline{How do people move in the city? } }
+\centering{\color{red!50!black} \LARGE How do people move in the city?
+
+\uncover<2->{
+\centerline{\includegraphics[width=.9\columnwidth, trim= 3.5cm 2cm 3cm 1cm, clip]{plots/{Shanghai-mobi-part.png}}}
+}
+}
+\end{frame}
+
+
+%\outNim{
+
+\begin{frame}{Network Theory Primer}
+\begin{itemize}
+\item A Network has \alert{nodes}, labeled $i,j,..$ and \alert{links}. We consider \alert{undirected} links here.
+\item $A_{ij}$:``Adjacency matrix'' entries $A_{ij}$: 1 if $i$ linked to $j$, 0 otherwise.
+
+\item $k_i= \sum_j A_{ij}$: Degree (\# of neighbors of $i$)
+
+\item $P(k)$: Degree distribution.
+
+\end{itemize}
+\end{frame}
+
+
+
+\begin{frame}{Network Theory Primer}{Network Characteristics and ``Moments'' of $A_{ij}$}
+
+{\Large
+%Properties of $A_{ij}$ characterize network structure.
+
+%\begin{itemize}
+\only<1>{\alert{First} network moment: Degrees $$k_i= \sum_j A_{ij}, $$ analyzed through $P(k)$, the \alert{degree distribution}}
+\only<2>{ \alert{2nd} network moment: First neighbor degrees $$k^{(1)}_i= {1\over k_i}\sum_j \left[A^2\right]_{ij},$$
+analyzed by \alert{degree-degree correlation} $\langle k^{(1)}(k)\rangle $}
+\only<3->{ \alert{3rd} network moment: 2nd neighbors and triangle counts $$k^{(2)}={1\over k_i^{(1)}} \sum_j \left[A^3\right]_{ij}.$$ We'll look at \alert{local clustering} $c(k)$
+\begin{equation*}
+c_{i}\equiv\frac{2\times \mbox{\# of triangles involving\ }i}{k_{i}(k_{i}-1)}\uncover<4->{= \frac{[A^3]_{ii}}{k_{i}(k_{i}-1)}}
+\end{equation*}
+} %only
+}
+%\end{itemize}
+\end{frame}
+
+
+%} % \outNim
+
+\outNim{
+
+\begin{frame}{Network Characteristics and ``Moments''}
+Properties of $A_{ij}$ characterize network structure.
+
+\begin{itemize}
+\item First network moment: Degrees $k_i= \sum_j A_{ij} $, analyzed through $P(k)$
+\item 2nd network moment: First neighbor degrees $k^{(1)}_i= \sum_j \left[A^2\right]_{ij}$, analyzed by \alert{degree-degree correlation} $k^{(1)}(k)$
+\item 3rd network moment: 2nd neighbors and triangle counts $k^{(2)}=\sum_j \left[A^3\right]_{ij}$. We'll look at \alert{local clustering} $c(k)$
+\begin{equation}
+c_{i}\equiv\frac{2\times \mbox{\# of triangles involving\ }i}{k_{i}(k_{i}-1)}\uncover<2->{= \frac{[A^3]_{ii}}{k_{i}(k_{i}-1)}}
+\end{equation}
+
+\end{itemize}
+\end{frame}
+
+}%% out
+
+
+\outNim{
+
+\begin{frame}{Cities as collections of ``Rendezvous Points''}
+\centerline{
+\begin{tabular}{cc}
+ \includegraphics[height=.50\columnwidth, angle=90, trim= 1cm 0 2cm 0, clip]{plots/city-night1.jpg} &\includegraphics[width=.50\columnwidth]{plots/city2.jpg} \\
+ \includegraphics[width=.50\columnwidth]{plots/city3.jpg}
+&\includegraphics[width=.50\columnwidth]{plots/city4.jpg}
+\end{tabular}
+}
+\end{frame}
+
+
+
+
+\begin{frame}{\only<3>{{\Huge Paris!}} Density of ``Rendezvous Points''}{}
+
+\only<2>{
+\centerline{
+\begin{tabular}{cc}
+\includegraphics[height=.30\columnwidth, angle=90]{plots/city2.jpg}&
+ \includegraphics[width=.7\columnwidth, angle=0]{plots/city2-1-fit1.pdf}
+\end{tabular}
+}
+}
+\only<1>{
+\centerline{\begin{tabular}{cc}
+\includegraphics[height=.30\columnwidth, angle=90]{plots/city3.jpg} &\includegraphics[width=.7\columnwidth]{plots/city3-1-fit1.pdf}
+ %\includegraphics[width=.30\columnwidth]{plots/city1-fit}
+%\includegraphics[width=.50\columnwidth]{plots/city4.jpg}
+\end{tabular}
+}
+}
+\only<3>{\centerline{
+\begin{tabular}{cc}
+\includegraphics[height=.30\columnwidth, angle=90]{plots/city-paris.jpg}&
+ \includegraphics[width=.7\columnwidth, angle=0]{plots/city-paris-fit.pdf}
+\end{tabular}
+}
+}
+\end{frame}
+
+\begin{frame}{Conclusion}
+
+\begin{itemize}
+\item
+Local Interactions, whether in real space or in an abstract parameter space, have important implications for the network structure
+\item Our model based on locally interacting stochastic agents can reproduce some features of real-world networks.
+\end{itemize}
+\end{frame}
+
+} %out
+
+%\end{document}
+\begin{frame}{Simulations}
+Local clustering of node $i$
+\begin{equation}
+c_{i}\equiv\frac{\mbox{\# of triangles}}{k_{i}(k_{i}-1)}
+\end{equation}
+Clustering coefficient $C$ is average of $c_i$.
+\begin{figure}[t]
+\centering{}\includegraphics[width=1\columnwidth]{plots/PKCK-123-crop}%\caption{Left: degree distributions of graphs generated for power-law distributions
+%with $\gamma=1,2,3$. Lines represent $k^{-\gamma}$ for $\gamma=1,2,3$.
+%Right: local clustering as a function of degree.\label{fig:simulation results}}
+\end{figure}
+
+
+
+\end{frame}
+
+\begin{frame}{Human Protein-Protein Interactions Network (PPI)}{Data Courtesy of the Barabasi Lab}
+
+PPI $C=0.29$, our $\gamma=2$ has $C=0.15$, comparable BA has $C=0.004$, random network has $C=1.5\times 10^{-3}$.
+\begin{figure}[t]
+\begin{centering}
+\includegraphics[width=1\columnwidth]{plots/PPI_clust_Pk-crop}\caption{\small Left: The degree distribution of PPI with $P(k)\sim k^{-2}$. Right:
+local clustering vs degree $k$ for PPI, our  $\gamma=2$, and a BA graph with $m=9$.
+All have comparable \# of nodes and edges. Shaded is one STD.}
+
+\par\end{centering}
+
+\label{fig:clust}
+\end{figure}
+
+\end{frame}
+
+
+\begin{frame}{C. Elegans Protein-Protein Interaction}{Data from HMS/Dana Farber {interactome.dfci.harvard.edu/C\_elegans/}}
+
+C. Elegans PPI $C=0.47$, our $\gamma=1$ has $C=0.20$, comparable BA has $C=0.004$, random network has $C=1.5\times 10^{-3}$.
+\begin{figure}[t]
+\begin{centering}
+\includegraphics[width=1\columnwidth]{plots/{CE_clust_Pk}.pdf}
+\caption{\small Left: The degree distribution and clustering of C. Elegans PPI.}
+\par\end{centering}
+
+\end{figure}
+
+\end{frame}
+
+\begin{frame}{Preliminary: C. Elegans PPI Degree-Degree Correlation}{Data from HMS/Dana Farber {interactome.dfci.harvard.edu/C\_elegans/}}
+$\bk{k_1}$= average degree of neighbors.
+\begin{figure}[t]
+\begin{centering}
+\includegraphics[width=.7\columnwidth]{plots/{CE-compare-clust-k1}.png}
+\caption{\small PPI networks have high $\bk{k_1}$, i.e. \alert{rich befriend the rich}.}
+\par\end{centering}
+
+\end{figure}
+
+\end{frame}
+
+
+\begin{frame}{Preliminary: Brain and Degree-Degree Correlation}
+``Scale-free brain functional networks'' Victor M. Egu\'iluz et al. (2003) fMRI of brain  Correlations in firing of neurons as a network.\\
+{\tiny (left plot from paper arxiv.org/abs/cond-mat/0309092v3 , right: our model)}
+\centerline{
+\includegraphics[width=.3\columnwidth]{plots/brain1.pdf}\includegraphics[width=.3\columnwidth]{plots/g2-clust-k1.png}
+}
+\end{frame}
+
+\begin{frame}%{Question!}
+\centering{{\color{red!50!black} \Huge How's this model \\ related to PPI or brain?!}\\
+\uncover<2->{Evolution as diffusion from $\Gamma$ and splitting into new nodes $i,j$
+{\LARGE \color{blue} PPI has highly conserved sub-networks across all species ($\Gamma$?)}\\
+For $P(k)=p(T-t) k^{-\gamma}$ and $\gamma>1$ in 2D\\
+\begin{tabular}{cc}
+  \includegraphics[width=.3\columnwidth]{plots/Mosca.jpg} & \includegraphics[width=.4\columnwidth, trim= 2cm 1cm 2cm 0]{plots/rand-circ-rev.pdf} \\
+ \scriptsize{source:Mosca et al. MCB 2012} &\scriptsize{Diffusing out of $\Gamma$}
+\end{tabular}
+}
+}
+\end{frame}
+
+%\begin{frame}{Future}
+
+%\end{frame}
+
+
+
+\begin{frame}{Human Protein-Protein Interactions Network (PPI)}{Data Courtesy of the Barabasi Lab}
+
+PPI $C=0.29$, our $\gamma=2$ has $C=0.15$, comparable BA has $C=0.004$, random network has $C=1.5\times 10^{-3}$.
+\begin{figure}[t]
+\begin{centering}
+\includegraphics[width=1\columnwidth,trim= 0 1cm 0 0]{plots/{PPI_clust_Pk2}.pdf}\caption{\small Left: The degree distribution of PPI with $P(k)\sim k^{-2}$. Right:
+local clustering vs degree $k$ for PPI, our  $\gamma=2$, and a BA graph with $m=9$.
+All have comparable \# of nodes and edges. Shaded is one STD.}
+
+\par\end{centering}
+
+\label{fig:clust}
+\end{figure}
+
+\end{frame}
+
+\end{document}
+
+\begin{frame}{A Simple Interaction Network}
+
+{%\tiny
+\centerline{
+\begin{tabular}{c}
+\includegraphics[width=.3\linewidth,trim= 0 2cm 0 1cm, clip]{{plots/rand-sketch1.pdf}}\\
+{\tiny Introducing node interaction.}
+\end{tabular}
+\begin{tabular}{c}
+\includegraphics[width=.3\linewidth,trim =  0 .7cm 0 0, clip]{plots/{rand-circ2n}.pdf}\\
+{\tiny Non-uniform interactions in space.}
+\end{tabular}
+}
+    \begin{itemize}
+    \item Network: If $i,j$ meet before time $T$ somewhere in space, they may form a link and $A_{ij}=1$ ($A$= Adjacency matrix)
+    \begin{align}
+A_{ij}(T)=\bk{\phi_i\phi_j}-\bk{\phi_i}\bk{\phi_j}%=& A(x_i,t_0,x_j,t_0;T)\cr
+%=& {1\over N}\int \mathrm{d}^n y \int^T \mathrm{d}t  G(x_i,t_0, y, t) f_{ij}(y,t) %\cr &
+%\times   G(x_j,t_0, y, t) + O\pr{{1\over N^2}}\label{eq:Aij1}
+\end{align}
+ \uncover<2->{
+    \item %Introduce interaction $\Gamma(x,t)$ to enable different agents $i,j$ to interact, e.g. density and attractiveness of \alert{``rendezvous points''}, probability of $i,j$ interacting = ensemble average of $A_{ij}$
+    \[\Gamma(x,t)\equiv {f_{ij} (x,t)\over N}  , \quad \mbox{for all\ }i,j \quad
+\bk{A_{ij}(T)}=\int^T dt \int d^dx \ \phi_i \Gamma\phi_j\]
+\end{itemize}
+
+}
+
+}%small
+\end{frame}
+
+
+\begin{frame}%{Question!}
+\centering{{\color{red!50!black} \Huge Can we get Power-laws?!}\\
+\uncover<2->{{\LARGE \color{blue} Yes!!}}}
+\begin{columns}
+\begin{column}{.75\textwidth}
+\uncover<2->{
+Define $\mathscr{L}_{x,t}\equiv \ro_t -\del^2$.
+For $P(k)=p(T-t) k^{-\gamma}$ and $\gamma>1$ in 2D put
+\[\Gamma(r,t) =\mathscr{L}_{\vec{r},t}^{\dagger}\left[\frac{\pi(\gamma-1)r^{2}+p(T-t)^{1/\gamma}}{p(T-t)}\right]^{\frac{1}{1-\gamma}}\]
+}
+\uncover<3->{ For $\gamma=1$ in 2D
+\[\Gamma(r,t)=\mathscr{L}_{\vec{r},t}^{\dagger}\left\{ p(T-t)\exp\left[\frac{\pi r^{2}}{p(T-t)}\right]\right\} \]
+}
+\end{column}
+\begin{column}{.25\textwidth}
+\uncover<3->{
+\begin{tabular}{c}
+ \includegraphics[width=\columnwidth]{plots/gamma123.pdf}\\
+ {\tiny $\Gamma$ for $\gamma=1,2,3$}
+\end{tabular}
+}%unc
+\end{column}
+\end{columns}
+
+\end{frame}
+
+\begin{frame}{Constraints on network moments}
+\begin{align}
+%\ba{\Ls}_{ij}k_j&= \Gamma_{ii}G_{il}^TJ_l=\Gamma_{ii} J_i\cr
+\Gamma_{xx}&= \Gamma(x,t)\theta(t)= {\ba{\Ls}_{xy}k_y \over J_y} \label{eq:kG}
+\end{align}
+``degree-degree correlation'' or degree assortativity, which compares the average degree of the first neighbors $k^{(1)}_i$ of a node $i$ to $k_i$. The $m$th neighbor average degree, $k_i^{(m)}$ is
+\begin{align}
+k_i^{(m)}%= &{1\over k_i^{(m-1)}} [(A J)^m k ]_i
+=&{1\over k_i^{(m-1)}} \sum_{j} A_{ij}k_j^{(m-1)}={1\over k_i^{(m-1)}} [A J k^{(m-1)} ]_i
+\end{align}
+where $J_{xy} = \delta_{xy}J_x$.
+Acting with $\ba{\Ls}$ on this yields
+\begin{align}
+\ba{\Ls}_{ii}\pr{k_i^{(m)}k_i^{(m-1)}}=
+\Gamma_{ii} J_{i} k^{(m-1)}_i
+%= &{1\over k_i^{(m-1)}} [(A J)^m k ]_i
+%=&\left[\ba{\Ls}_{ji},\pr{ k_i^{(m-1)}}^{-1}\right] \left[A J k^{(m-1)} \right]_i  \cr
+%&+{1\over k_i^{(m-1)}} \ba{\Ls}_{ji}\left[A J k^{(m-1)} \right]_i
+\end{align}
+\end{frame}
+
+
+
+
+\begin{frame}{Analytical Results}
+Define $\mathscr{L}_{x,t}\equiv \ro_t -\del^2$,% so $ \mathscr{L}_{x,t} \phi_i(x,t)= \delta(t-t_0)\delta^d(x-x_i)$.
+\begin{enumerate}
+\item The average degree of nodes starting around $x_i$ becomes
+\[k(x_i,t_0;T)=\sum_j\bk{A_{ij}} =\int^T dt \int d^dx \phi_i \Gamma\]
+
+\item The ``Rendezvous Points'' $\Gamma(x,t)$ \alert{source the degree} $k$ (for $t<T$)
+\begin{tcolorbox}%[ams align*]
+\Large
+\[ \Gamma(x,t)= \mathscr{L}^\dag_{x,t} k(x,t;T)\]
+\end{tcolorbox}
+\item When $\Gamma=\Gamma(r,t)$ has spherical symmetry $dN(r)$, the number of nodes around radius $r$ is related to degree distribution $P[k(r,t,T)]$
+\[|P(k)dk|=dN \]
+\end{enumerate}
+
+\end{frame}
+
+\begin{frame}{Power-laws $P(k)\sim k^{-\gamma}$ }
+\begin{figure}
+{\scriptsize
+\begin{centering}
+\parbox[b][1\totalheight][t]{1\textwidth}{%
+\begin{tabular}{l>{\raggedright}m{2cm}>{\raggedright}m{3.5cm}>{\raggedright}m{2.3cm}}
+\hline
+\noalign{\vskip0.06cm}
+\multirow{2}{*}{} & \multirow{2}{2cm}{$\boldsymbol{k(r,t,T)}$ } & \multicolumn{2}{c}{$\boldsymbol{\Gamma(r,t)}^{\dagger}$ \ \ \ \ \ }\tabularnewline[0.07cm]
+\cline{3-4}
+\noalign{\vskip0.06cm}
+ &  & {{$k_{\mathrm{max}}(T-t)=4\pi(T-t)$}}  & {{$k_{\mathrm{max}}(T-t)=\pi c$}} \tabularnewline[0.15cm]
+\hline
+\noalign{\vskip0.06cm}
+ $\boldsymbol{\gamma=1^{*}}$  & $\frac{\theta(T-t)}{4\pi(T-t)}e^{\frac{r^{2}}{4(T-t)}}$  & $\delta^{2}(\vec{r})\delta(T-t)$  & \tabularnewline[0.15cm]
+\hline
+\noalign{\vskip0.06cm}
+$\boldsymbol{\gamma=1}$  & $k_{\mathrm{max}}e^{-\frac{\pi r^{2}}{k_{\mathrm{max}}}}$  & $4\pi e^{-\frac{\rho^{2}}{4}}$  & $\dfrac{4\left(c-r^{2}\right)}{\pi c^{3}}e^{-\frac{r^{2}}{c}}$ \tabularnewline[0.15cm]
+\hline
+\noalign{\vskip0.06cm}
+$\boldsymbol{\gamma=2}$  & $\dfrac{k_{\mathrm{max}}^{2}}{\pi r^{2}+k_{\mathrm{max}}}$  & $32\pi\dfrac{\left(\rho^{4}+4\rho^{2}+16\right)}{\left(\rho^{2}+4\right)^{3}}$  & $4\pi\dfrac{c^{2}\left(c-r^{2}\right)}{\left(2r^{2}+c\right)^{3}}$ \tabularnewline[0.15cm]
+\hline
+\noalign{\vskip0.06cm}
+ $\boldsymbol{\gamma=3}$  & $\left[\dfrac{k_{\mathrm{max}}^{3}}{2\pi r^{2}+k_{\mathrm{max}}}\right]^{1/2}$  & $2^{3/2}\pi\dfrac{\left(3\rho^{4}+8\rho^{2}+16\right)}{\left(\rho^{2}+2\right)^{5/2}}$  & $4\pi\dfrac{c^{3/2}\left(c-r^{2}\right)}{\left(2r^{2}+c\right)^{5/2}}$ \tabularnewline[0.15cm]
+\hline
+ {\scriptsize{$^{\dagger}(\rho\equiv {r\over \sqrt{T-t}})$}}  &  &  & \tabularnewline
+\end{tabular}\\
+ \vspace{0.35cm}
+ %
+}%\includegraphics[height=5.55cm]{plots/Gamma-beta1-2-3-crop}
+\par\end{centering}
+}%small
+\caption{The spatial degree function $k(r,t,T)$ and RP distribution function
+$\Gamma(x,t)$ for various exponents in 2 spatial dimensions. The
+models are characterized by $k_{\mathrm{max}}=k_{\mathrm{max}}(T-t)$
+taken here to be linear: $k_{\mathrm{max}}(s)\propto s$. \label{fig:123}}
+\end{figure}
+
+\end{frame}
+
+
+
+\begin{frame}{A Simple Interaction Network}
+\centerline{
+\begin{tabular}{c}
+\includegraphics[width=.5\linewidth]{plots/uniform.pdf}\\
+{\tiny Interactions uniform in space.}
+\end{tabular}
+}
+    \begin{itemize}
+    \item If the nodes are uniformly distributed in space and $\Gamma$ is also uniform in space $\Rightarrow \bk{A_{ij}}$ is the same for all $i,j$ $\Rightarrow$ All nodes have roughly the same degree
+    %\item
+    \end{itemize}
+\uncover<2->{
+$\Rightarrow$ To get nontrivial degree distribution we need to \alert{break spatial symmetry.}
+\\
+(We will assume nodes are uniformly spread over space.)
+}
+\end{frame}
+
+\begin{frame}{Non-uniform ``Rendezvous Points'' $\Gamma$}
+\centerline{
+\begin{tabular}{c}
+\includegraphics[width=.5\linewidth,trim =  0 .7cm 0 0, clip]{plots/{rand-circ1}.pdf}\\
+{\tiny Non-uniform interactions in space.}
+\end{tabular}
+}
+\begin{itemize}
+ 
+\item But for all $i\ne j$
+\[\Gamma_{ij}(x,t)\to  \Gamma(x,t)\]
+
+\end{itemize}
+\end{frame}
+
+\begin{frame}%{Question!}
+
+{\centering {\color{red!50!black} \huge What's the effect of ``rendezvous point'' distribution on formation of social ties and the structure of social networks in cities?}
+}
+\\
+\medskip
+\uncover<2->{
+{\Large Phone call data$^*$}
+\begin{itemize}
+\item ``More than 90\% of users who have called each other have also shared the same space (cell tower), even if they
+live far apart.''
+\item ``close to 70\% of users who call each other frequently (at least once per month on
+average) have shared the same space at the same time (``co-location'').''
+\end{itemize}
+
+{\tiny * Interplay between Telecommunications and Face-toFace
+Interactions: A Study Using Mobile Phone Data, {\em Calabrese et al.}}
+}%uncover
+\end{frame}
+\section{Agents as Particles}
+
+
+\begin{frame}{Clustering constraints}
+\begin{equation}
+c_{i}\equiv\frac{2\times \mbox{\# of triangles involving\ }i}{k_{i}(k_{i}-1)}= \frac{[A^3]_{ii}}{k_{i}(k_{i}-1)}
+\end{equation}
+Since $k^{(2)}_i=\sum_j [A^3]_{ij}/k_i^{(1)}$ we have
+\begin{equation}
+c_i\leq {k^{(2)}_ik^{(1)}_i \over k_i(k_i-1)}\label{eq:ck2}
+\end{equation}
+\end{frame}
+
+
+\begin{frame}{Simulations confirm}
+\includegraphics[width=\textwidth]{plots/degree-distribution-crop.pdf}\\
+Simulations with $10^5$ nodes
+\end{frame}
+
+
+\begin{frame}{Yet Another Power-law model? ....}
+\begin{itemize}
+\item Power-law models are a dime a dozen.
+\item Popular ones are ``preferential attachments'' models, such as Barabasi-Albert (BA) and its variations.
+\item Real challenge of matching real-world networks, especially biological ones, is getting higher order characteristics like \alert{clustering} and \alert{degree-degree correlation}
+\end{itemize}
+\end{frame}
+
+
+
+\begin{frame}{Local (?) vs non-local network}
+
+\begin{figure}[t]
+\centering{}\includegraphics[width=1.1\columnwidth]{plots/Big3-GoW-CE.pdf}%\caption{Left: degree distributions of graphs generated for power-law distributions
+%with $\gamma=1,2,3$. Lines represent $k^{-\gamma}$ for $\gamma=1,2,3$.
+%Right: local clustering as a function of degree.\label{fig:simulation results}}
+\end{figure}
+
+
+
+\end{frame}
+
+\begin{frame}{Local (?) vs non-local network}
+
+\begin{figure}[t]
+\centering{}\includegraphics[width=1.1\columnwidth]{plots/Big3-hep-het.pdf}%\caption{Left: degree distributions of graphs generated for power-law distributions
+%with $\gamma=1,2,3$. Lines represent $k^{-\gamma}$ for $\gamma=1,2,3$.
+%Right: local clustering as a function of degree.\label{fig:simulation results}}
+\end{figure}
+
+
+
+\end{frame}
+
+
+\begin{frame}{Benefits of going Geo}
+{\centerline{ \tiny
+\begin{tabular}{cc}
+ \includegraphics[width=.35\columnwidth]{plots/boston.jpg}&
+ \includegraphics[width=.50\columnwidth]{plots/paris-subway.png}\\
+ Traffic, Boston (CEE, MIT)&
+ Paris subway
+ (Dataveyes)
+\end{tabular}
+}
+}
+
+
+\begin{itemize}
+%\item Working with densities: simulation time much smaller than direct agent-based
+\item Geographical barriers, attractions, etc are all part of the background potential $\Gamma$ and the metric on the space.
+\item Average commuting speed can be put in the metric.
+\item In a way generalizes gravity model to include background.
+\end{itemize}
+
+
+\end{frame}
+
+
+\end{document}
+
+
+
+\begin{frame}{Modelling Near Crisis Situation in bipartite network}
+
+{\small
+\begin{columns}
+  \begin{column}{.6\textwidth}
+  \begin{enumerate}
+  \item%<2->
+  {
+    Trading protocol: Fearing similar risk, adjust all GIIPS holdings  to meet balance sheet requirements
+    {\small
+\[\delta A_{i\mu}(t+\tau_B)=\beta {\delta E_i(t)\over E_i(t)} A_{i\mu}(t)\]}
+\vspace{-20pt}
+  }
+  \item%<3->
+  {
+    Market responds with a similar market depths $1/\alpha$ for all GIIPS (Assuming GIIPS bonds are liquid) $A_{\mu}=\sum_i A_{i\mu}$.
+    {\small \[\delta p_\mu(t+\tau_A)=\alpha {\delta A_\mu(t)\over A_\mu (t)}p_\mu (t)  \]}
+    \vspace{-20pt}
+  }
+  % or you can use the \uncover command to reveal general
+  % content (not just \items):
+  \item%<4->
+  {
+  with exogenous equity changes $S_i$ {\small
+  \vspace{-10pt}\[\delta E_i(t)= \sum_\mu A_{i\mu}(t) \delta p_\mu(t)+S_i(t). \]}
+   %
+   \uncover<2->{
+   \tiny $E=A\cdot p +c -L$, $c=$ cash, $L=$liability. assume $\delta L=0$, $\delta c=\delta A\cdot p$
+   }
+    
+  }
+  \end{enumerate}
+  \end{column}
+  \begin{column}{.5\textwidth}
+  \centering
+  \begin{tabular}{rl}
+   \begin{tabular}{c}
+   %\uncover<6->{
+   \color{blue} $\beta$: Bank ``panic'' factor
+   %}
+   \\
+  Banks have equity $E_i$ \\
+   \includegraphics[width=.6\linewidth, trim= 0 1em 0 0, clip]{graph7.pdf}\\
+   Bonds have a price $p_\mu$\\
+   %\uncover<6->{
+   \color{red} $\alpha$: inverse market depth.
+   %}
+  \end{tabular}& \hspace{-30pt} $A_{i\mu}$
+  \end{tabular}
+  \newline
+  %Number of bonds owned $A_{i\mu}$\newline
+
+  \end{column}%\pause
+  \end{columns}
+  }%small
+\end{frame}
+
+
+\begin{frame}{Differential equations}
+Going to continuous time and expanding to linear order in $\tau_A, \tau_B$ yields
+
+\begin{align}
+\pa{\tau_B\ro_t^2 +\ro_t }A_{i\mu}(t)&=\beta {\ro_t E_i(t)\over E_i(t)} A_{i\mu}(t)\label{eq:ddA}\\
+\pa{\tau_A\ro_t^2 +\ro_t } p_\mu(t)&=\alpha {\ro_t A_\mu(t)\over A_\mu (t)}p_\mu (t)\label{eq:ddp} \\
+\ro_t E_i(t)&= \sum_\mu A_{i\mu}(t) \ro_t p_\mu(t)+f_i(t). \label{eq:ddE}
+\end{align}
+For $\gamma$ the exact expression used is (Dom: 2-4 largest (dominant) holders)
+\begin{equation}
+\gamma \approx  \frac{\delta p_\mu/ p_\mu} {\sum_{i\in \mathrm{Dom}} {A_{i\mu}\over A_\mu}{\delta E_i/ E_i
+}}.%{ \delta E^*_{(\mu)}/ E^*_{(\mu)} }.
+\end{equation}
+\end{frame}
+
+
+\begin{frame}{Phase diagram and phase transitions}
+\begin{block}{Sum of final prices and time to reach equilibrium}
+\centerline{\includegraphics[width=.45\linewidth]{{Sergeyphasediag2601}.pdf}\includegraphics[width=.45\linewidth]{{phaseTimefit2601}.pdf}}
+Left: Sum of final prices showing a fairly smooth transition near $\gamma=1$ curve (white dashed curve). \newline
+Right: Time to reach equilibrium. Near 2nd order phase transition relaxation time grows, as foces pushing to equilibrium become small.
+\end{block}
+
+\end{frame}
+
+
+
+% You can reveal the parts of a slide one at a time
+% with the \pause command:
+\begin{frame}{Predicting Approaching Crises}
+  \begin{itemize}
+  \item {Our analysis shows when the product of the ``inverse market depth'' and the ``bank panic factor'' becomes larger than 1, the system will be unstable and a {\color{red} crisis} is imminent
+  \[\gamma \equiv \alpha \beta, \quad \mbox{crisis if:~} \gamma >1 \]
+  }
+  \item%<2->
+  {
+  This stability parameter $\gamma$ can be measured easily, using dominant holders. Using price of common stocks as a proxy for equity
+  \[\gamma \approx {\delta p/ p\over \delta E/ E}={\mbox{log return on bond prices}\over \mbox{log return on stock of dominant holders}}\]
+  }
+  % You can also specify when the content should appear
+  % by using <n->:
+  \item%<3->
+  {
+    Observing that $\gamma>0$ and {\color{red}rising} will mean that we are {\color{red}approaching a crisis}.
+  }
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Results from the GIIPS Holders Network}
+\begin{block}{Stability Parameter $\gamma$}
+\centerline{\includegraphics[width=.6\linewidth]{{120414gamma_EBA_ab_120}.pdf}}
+Top: Value of $\gamma$ averaged for the 5 GIIPS countries. \newline
+Bottom: $\gamma$ calculated for each country individually$^*$.
+\end{block}
+{\tiny $^*$Note that in order for the approximation to hold, $\gamma$ needs to be estimated over period much larger than the typical response time of Banks ($\tau_B$) and market ($\tau_A$). Since we estimate these to be of order of a few weeks for the OTC sovereign bond market, we calculated $\gamma$ over 4 month periods.}
+\end{frame}
+
+\begin{frame}{}
+\centering{{\color{red!50!black} \Huge Why Care About This\\ Model?!}\\
+\uncover<2->{\LARGE \color{blue} Landau-Ginzburg is your friend!!}
+}
+\end{frame}
+
+\section{Landau-Ginzburg}
+\begin{frame}{Landau-Ginzburg-type: Basic Idea}
+\begin{itemize}
+\item
+The ``effective Lagrangian'' is a scalar.
+\item We're expanding near some equilibrium or metastable point.
+\item Write down the simplest scalars you can imagine.
+\item Simplest nontrivial Lagrangians should include some terms with 2 time derivatives (since some single derivatives may vanish)
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Possible terms}
+\begin{itemize}
+\item Lowest order scalar combination is $E^TAp$
+\item Possible terms with one time derivative
+\[E^TA\ro_t p+ \gamma \ro_t E A p\]
+\item Possible terms with two time derivative
+\[\ro_t E^TA\ro_t p+ \tau_B \ro_t E \ro_t A p+ \tau_A E^T \ro_t A \ro_t p \]
+\item no time derivatives
+\[c E^T A p \]
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Stability}
+\begin{itemize}
+\item To assess stability we need a Hamiltonian
+\[H=p_i\ro_t q_i- L\]
+\item If Hamiltonian has form
+\[H(p,q)=T(p,q)+V(q)\]
+then the second derivatives of $V$ tells us about the stability. \item<2->{In general with a random network solving for conjugate momenta and finding Hamiltonian is hard.}
+\item<2->{Look at the simplest case: 1 by 1 system.}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Horrible Hamiltonian!}
+\begin{itemize}
+\item Full Hamiltonian nightmare
+\begin{align}
+H=&- \frac{A E p \tau_{A}}{4 \tau_{B}} \gamma^{2} + \frac{A E}{2} \gamma p - \frac{A E p \tau_{B}}{4 \tau_{A}} - \frac{A \gamma \pi_{A}}{2 \tau_{B}} - \frac{A \pi_{A}}{2 \tau_{A}}
+\cr&- \frac{A \pi_{A}^{2}}{4 E p \tau_{A} \tau_{B}} + \frac{E \gamma \pi_{E} \tau_{A}}{2 \tau_{B}} - \frac{E \pi_{E}}{2}\cr
+&- \frac{\gamma \pi_{p}}{2} p + \frac{\pi_{A} \pi_{E}}{2 p \tau_{B}} + \frac{\pi_{p} p \tau_{B}}{2 \tau_{A}} + \frac{\pi_{A} \pi_{p}}{2 E \tau_{A}}
+\cr&- \frac{E \pi_{E}^{2} \tau_{A}}{4 A p \tau_{B}} + \frac{\pi_{E} \pi_{p}}{2 A} - \frac{\pi_{p}^{2} p \tau_{B}}{4 A E \tau_{A}} -c EAp
+\end{align}
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Potential Energy}
+Setting conjugate momenta $\pi_E,\pi_p,\pi_A\to 0$ we get the potential
+\uncover<2->{\[- EAp \pa{\frac{\left(\gamma \tau_{A} - \tau_{B}\right)^{2}}{4 \tau_{A} \tau_{B}}+c} .\]}
+
+\uncover<3->{With $c=0$ and $\tau_A=\tau_B=1$ (like our model and simulations)
+\[- \frac{E A  p}{4} \left(\gamma  - 1\right)^{2}.\]
+Interesting...
+}%uncover
+\end{frame}
+
+\begin{frame}{More General System}
+The nodes have a functions deoted by vector $\Phi(t)$ and network connections are $A(t)$
+\[A_+\equiv {1\over 2} (A+A^T),\quad A_-\equiv {1\over 2} (A-A^T).\]
+
+The lowest order scalars are $\Phi^T\Phi,\mathrm{Tr}[A^TA],\Phi^TA\Phi$ and its derivatives. %Thus, to lowest order, a Landau-Ginzburg Lagrangian could be %for this system would look like:
+Consider
+\[L=\ro_t \Phi^TA_+ \ro_t \Phi+ \Phi^TB  \ro_t\Phi  + c \Phi^T A_+ \Phi\]
+with
+\begin{align*}
+B_\pm &\equiv \tau_\pm \ro_t A_\pm+b_\pm A_\pm\cr
+B &\equiv B_++B_-\cr
+%b A&\equiv b_+A_++b_-A_-\cr
+%\mathcal{L}&=a\ro_t \Phi^TA_+ \ro_t \Phi+ \Phi^TB  \ro_t\Phi  + c \Phi^T A_+ \Phi.
+\end{align*}
+%Although the Lagrangian is quadratic in $\Phi$, the full Lagrangian is not quadratic because $A$ is also dynamic.
+
+\end{frame}
+
+\begin{frame}{Hamiltonian?}
+\begin{itemize}
+\item Solving for $\ro_t \Phi$ from conjugate momenta is easy, but $A_\pm$ is, probably, impossible! (Equations degenerate and thus unsolvable)
+\item May be possible if
+\[L\to L+ g_+\mathrm{Tr}[A^T_+A_+]+g_-\mathrm{Tr}[A^T_-A_-]\]
+\item<2->{
+Yields a potential looking something like (needs double-checking...)
+\begin{align*}
+V\sim& \Phi^T (bA)^T\pa{ A_+-\pa{{\tau_+\over g_+}+{\tau_-\over g_-}}%{(g_+q_-+g_-q_+)\over g_+g_-}
+\Phi\Phi^T}^{-1}(bA) \Phi
+\cr& -c\Phi^TA_+\Phi
+\end{align*}
+where $bA\equiv b_+A_++b_-A_-$
+}%item
+\end{itemize}
+\end{frame}
+
+
+
+\begin{frame}{Special Case: Symmetric Bipartite}
+\begin{itemize}
+\item Consider the case where $\tau_+=\tau_-\to  0$ or that $\tau_\pm \ll g_\pm $ %(these are time scales)
+
+\item Assume:
+\[A_+=\pa{\begin{matrix}0 & M \\ M &0  \end{matrix}}, \quad A_-=\pa{\begin{matrix}0 & M \\ -M &0  \end{matrix}}
+\]
+%This is characteristic of a bipartite, unidirectional network.
+\item Also assume $|M|\ne0$ (i.e.  invertible square matrix). %This will have the property that:
+\[A_+^{-1} A_-= \pa{\begin{matrix}-1 & 0 \\ 0 &1  \end{matrix}}, \quad \Rightarrow A_- A_+^{-1} A_- =  A_+\]
+
+\begin{align}
+V&\to %{1\over 4 a}\pa{b_+^2 A_+ + b_-^2 A_-A_+^{-1}A_-} -c A_+\cr &=
+{1\over 4}\pa{b_+^2 - b_-^2 -4 c} \Phi^TA_+ \Phi
+%\cr& = \pa{b - c} A_+
+\end{align}
+%Where the $b_+b_-$ terms cancel from $A_-+A_-^T=0$.
+\item Put $b_\pm= 1\pm b$. When $|A_+|\ne0$ saddle point only when
+\begin{tcolorbox}%[ams align*]
+\[b-c =0 \]
+\end{tcolorbox}
+
+\end{itemize}
+
+\end{frame}
+
+
+\begin{frame}{}
+\centerline{{\color{red!50!black} \Huge Thank You!}}
+\end{frame}
+
+
+\begin{frame}{Bonus -2: Simulations of GIIPS Holders Network}
+\vskip -5pt
+{\tiny Prices and equities after a 10\% shock to a random bank in network. Shocking any bank yields similar results.}
+\begin{block}{Stable regime ($\gamma=\alpha\beta<1$)}
+\begin{columns}
+\begin{column}{.65\linewidth}
+\centerline{\includegraphics[width=.95\linewidth]{{pEmergedEBAab060}.pdf}}
+\end{column}
+\begin{column}{.30\linewidth}
+{\small Left: Greece is most vulnerable. \newline
+Right: 4 of the most vulnerable banks (3 Greek, 1 Italian).
+}
+\end{column}
+\end{columns}
+\end{block}
+\vskip -5pt
+%\uncover<2->
+{
+\begin{block}{Unstable regime ($\gamma=\alpha\beta>1$)}
+\begin{columns}
+\begin{column}{.65\linewidth}
+\centerline{\includegraphics[width=.95\linewidth]{{pEmergedEBAab150}.pdf}}
+\end{column}
+\begin{column}{.30\linewidth}
+{\small Left: Almost all GIIPS assets are extremely vulnerable. \newline
+right: Most vulnerable banks are the same as before.}
+\end{column}
+\end{columns}
+\end{block}
+}
+\end{frame}
+
+\begin{frame}{Bonus -1: Do the Details Matter?
+%Simulations of GIIPS Holders Network
+}
+%\vskip -1pt
+%{\centering {\LARGE \color{red!50!black} Do the details matter?}}
+\begin{block}{Actual Data}
+\begin{columns}
+\begin{column}{.65\linewidth}
+\centerline{\includegraphics[width=.95\linewidth]{{pEmergedEBAab060}.pdf}}
+\end{column}
+\begin{column}{.30\linewidth}
+{\small Left: Greece is most vulnerable . \newline
+Right: 4 of the most vulnerable banks (3 Greek, 1 Italian).
+}
+\end{column}
+\end{columns}
+\end{block}
+\vskip -5pt
+%\uncover<2->
+{\begin{block}{Shuffling which bank lent to which country}
+\begin{columns}
+\begin{column}{.65\linewidth}
+\centerline{\includegraphics[width=.95\linewidth]{{pErandmergedEBAab059}.pdf}}
+\end{column}
+\begin{column}{.30\linewidth}
+{\small Keeping total debt constant, only shuffling the holders: \alert{completely different outcome}}
+\end{column}
+\end{columns}
+\end{block}}
+\end{frame}
+
+
+\begin{frame}{Bonus 1: BankRank: A Systemic Importance Measure}
+\begin{block}{BankRank: fraction of damage from failure of each bank}
+\centerline{\includegraphics[width=\linewidth]{{120514RankMulti,a=b=1.5}.pdf}}
+\end{block}
+\begin{itemize}
+\item measures damage suffered by sysem if one bank fails.
+\item In the crisis situation $\gamma>1$ it has little correlation with holdings, etc.
+\item measured by decreasing initial equity of a bank to the level that it fail during simulation (without directly shocking this bank)
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{Bonus 2: BankRank vs holdings}
+\begin{block}{BankRank as a function $\alpha, \beta$}
+\centerline{\includegraphics[width=.45\linewidth, trim= 0 .3in 0 .6in, clip ]{{122214-Scatter-Compare}.pdf}}
+Top left: BankRank vs holdings at $\alpha=\beta=0.4$. Holdings completely determine BankRank here.  \newline
+Rest: Comparison of Holdings with BankRanks at higher $\alpha,\beta$. In the unstable regime the correlation becomes less apparent. Thus holdings no longer determine BankRank.
+\end{block}
+\end{frame}
+
+
+\begin{frame}{Bonus 3: Remarks on the data}
+\centerline{\small
+\begin{tabular}{@{\vrule height 8.5pt depth4pt  width0pt}lccccc}\hline
+& Greece & Italy & Portugal & Spain & Ireland\\ \hline
+Total (bnEu) & 274 & 1641 &   129 &   693 & 90\\ \hline
+\% in Banks & 35 & 26 & 38 & 48 & 36\\ \hline
+\end{tabular}
+}
+\begin{itemize}
+\item Holders were banks, funds and insurance companies from all over the world. We will refer to all as ``Banks''.
+\item Consolidated to about 100 Banks usable for our analysis.
+\item By end of 2011, Nat. Bank of Greece and Piraeus Bank, two of the major holders of Greece were bankrupt, so they were excluded.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Bonus 4: Results from the GIIPS Holders Network}
+\begin{block}{Stability Parameter $\gamma$}
+\centerline{\includegraphics[width=.65\linewidth]{{120414gamma_EBA+Ge_ab_60}.pdf}}
+Top: Value of $\gamma$ averaged for the 5 GIIPS countries. \newline
+Bottom: $\gamma$ calculated for each country individually$^*$.
+\end{block}
+{\tiny $^*$Note that in order for the approximation to hold, $\gamma$ needs to be estimated over period much larger than the typical response time of Banks ($\tau_B$) and market ($\tau_A$). Since we estimate these to be of order of a few weeks for the OTC sovereign bond market, we calculated $\gamma$ over 4 month periods.}
+\end{frame}
+
+\end{document}
+
+
+\section{Second Main Section}
+
+\subsection{Another Subsection}
+
+\begin{frame}{Blocks}
+\begin{block}{Block Title}
+You can also highlight sections of your presentation in a block, with it's own title
+\end{block}
+\begin{theorem}
+There are separate environments for theorems, examples, definitions and proofs.
+\end{theorem}
+\begin{example}
+Here is an example of an example block.
+\end{example}
+\end{frame}
+
+% Placing a * after \section means it will not show in the
+% outline or table of contents.
+\section*{Summary}
+
+\begin{frame}{Summary}
+  \begin{itemize}
+  \item
+    The \alert{first main message} of your talk in one or two lines.
+  \item
+    The \alert{second main message} of your talk in one or two lines.
+  \item
+    Perhaps a \alert{third message}, but not more than that.
+  \end{itemize}
+  
+  \begin{itemize}
+  \item
+    Outlook
+    \begin{itemize}
+    \item
+      Something you haven't solved.
+    \item
+      Something else you haven't solved.
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+
+
+% All of the following is optional and typically not needed.
+\appendix
+\section<presentation>*{\appendixname}
+\subsection<presentation>*{For Further Reading}
+
+\begin{frame}[allowframebreaks]
+  \frametitle<presentation>{For Further Reading}
+    
+  \begin{thebibliography}{10}
+    
+  \beamertemplatebookbibitems
+  % Start with overview books.
+
+  \bibitem{Author1990}
+    A.~Author.
+    \newblock {\em Handbook of Everything}.
+    \newblock Some Press, 1990.
+ 
+    
+  \beamertemplatearticlebibitems
+  % Followed by interesting articles. Keep the list short.
+
+  \bibitem{Someone2000}
+    S.~Someone.
+    \newblock On this and that.
+    \newblock {\em Journal of This and That}, 2(1):50--100,
+    2000.
+  \end{thebibliography}
+\end{frame}
+
+\end{document}
+
+
